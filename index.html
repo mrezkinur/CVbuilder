@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>CV Builder Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- ===== TOPBAR ===== -->
+<header class="topbar" role="banner">
+  <button class="icon-btn" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Menu" aria-expanded="false" style="font-family:var(--font-pixel);font-size:11px;font-weight:700;letter-spacing:1px">≡</button>
+  <a href="#" class="topbar-logo">
+    <div class="logo-mark">CV</div>
+    <span class="logo-text">BUILDER<span>.PRO</span><span style="animation:blink 1s steps(1) infinite;color:var(--accent)">_</span></span>
+  </a>
+  <div class="topbar-sep"></div>
+  <div class="topbar-progress">
+    <div class="prog-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+      <div class="prog-fill" id="progressFill"></div>
+    </div>
+    <span class="prog-pct" id="progressPct" aria-live="polite">0%</span>
+    <span class="saved-badge" id="savedBadge" aria-live="polite">✓ SAVED</span>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" onclick="doUndo()" title="Undo (Ctrl+Z)" aria-label="Undo" style="font-family:var(--font-pixel);font-size:8px">↩</button>
+    <button class="icon-btn" onclick="doRedo()" title="Redo (Ctrl+Y)" aria-label="Redo" style="font-family:var(--font-pixel);font-size:8px">↪</button>
+    <button class="btn btn-secondary btn-sm" onclick="openPreview()" style="font-size:7px">▶ PREVIEW</button>
+    <button class="btn btn-primary btn-sm" onclick="exportPDF()" style="font-size:7px">⬇ PDF</button>
+  </div>
+</header>
+
+<!-- ===== APP BODY ===== -->
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="mainSidebar" role="complementary" aria-label="Pengaturan">
+    <div class="sb-group">
+      <div class="sb-label">Template CV</div>
+      <div class="tpl-grid" role="radiogroup">
+        <div class="tpl-card active" data-th="modern" role="radio" aria-checked="true" tabindex="0" onclick="setTheme('modern')"><div class="tpl-thumb t-modern"></div>Modern</div>
+        <div class="tpl-card" data-th="minimal" role="radio" aria-checked="false" tabindex="0" onclick="setTheme('minimal')"><div class="tpl-thumb t-minimal"></div>Minimal</div>
+      </div>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">Tampilkan Section</div>
+      <div class="toggle-list" id="sectionToggles" role="group"></div>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">Warna Aksen CV</div>
+      <div class="swatch-row" role="radiogroup" id="swatches" style="gap:8px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div class="swatch active" data-c="#1B4F8A" style="background:#1B4F8A;width:26px;height:26px" role="radio" aria-checked="true" tabindex="0" onclick="setAccent('#1B4F8A')"></div>
+          <span style="font-family:var(--font-pixel);font-size:5px;color:var(--tx-3)">Navy</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div class="swatch" data-c="#2E7D32" style="background:#2E7D32;width:26px;height:26px" role="radio" tabindex="0" onclick="setAccent('#2E7D32')"></div>
+          <span style="font-family:var(--font-pixel);font-size:5px;color:var(--tx-3)">Green</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div class="swatch" data-c="#7B1FA2" style="background:#7B1FA2;width:26px;height:26px" role="radio" tabindex="0" onclick="setAccent('#7B1FA2')"></div>
+          <span style="font-family:var(--font-pixel);font-size:5px;color:var(--tx-3)">Purple</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div class="swatch" data-c="#B71C1C" style="background:#B71C1C;width:26px;height:26px" role="radio" tabindex="0" onclick="setAccent('#B71C1C')"></div>
+          <span style="font-family:var(--font-pixel);font-size:5px;color:var(--tx-3)">Red</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div class="swatch" data-c="#1a1a1a" style="background:#1a1a1a;border-color:var(--border-med);width:26px;height:26px" role="radio" tabindex="0" onclick="setAccent('#1a1a1a')"></div>
+          <span style="font-family:var(--font-pixel);font-size:5px;color:var(--tx-3)">Black</span>
+        </div>
+      </div>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">Font & Layout</div>
+      <select class="field-select" id="fontSelect" onchange="setFont(this.value)" style="margin-bottom:var(--s3)">
+        <option value="Arial">Arial (ATS-Safe ✓)</option>
+        <option value="Calibri">Calibri (ATS-Safe ✓)</option>
+        <option value="Verdana">Verdana (ATS-Safe ✓)</option>
+        <option value="Georgia">Georgia (Serif)</option>
+      </select>
+      <div class="slider-row"><span class="slider-label">Margin</span><input type="range" min="5" max="25" value="14" class="slider" id="marginSlider" oninput="setMargin(this.value)"/><span class="slider-value" id="marginVal">14mm</span></div>
+      <div class="slider-row"><span class="slider-label">Spasi</span><input type="range" min="1.2" max="2.2" step="0.1" value="1.55" class="slider" id="spacingSlider" oninput="setSpacing(this.value)"/><span class="slider-value" id="spacingVal">1.55</span></div>
+      <div class="slider-row"><span class="slider-label">Font size</span><input type="range" min="8" max="11" step="0.5" value="9" class="slider" id="fontSizeSlider" oninput="setFontSize(this.value)"/><span class="slider-value" id="fontSizeVal">9pt</span></div>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">ATS Score</div>
+      <div class="ats-widget">
+        <div class="ats-ring" id="atsRing"><span id="atsScore">–</span></div>
+        <div class="ats-info">
+          <div class="ats-name" id="atsLabel">Belum dicek</div>
+          <div class="ats-bar"><div class="ats-fill" id="atsFill"></div></div>
+        </div>
+      </div>
+      <button class="sb-btn" style="margin-top:var(--s2)" onclick="runATSCheck()">✓ Cek Skor ATS</button>
+      <div id="atsTips" aria-live="polite"></div>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">Data CV</div>
+      <button class="sb-btn" onclick="fillSampleData()">✨ Isi Data Contoh</button>
+      <button class="sb-btn" onclick="openImport()">↑ Import JSON</button>
+      <button class="sb-btn" onclick="exportJSON()">↓ Export JSON</button>
+      <button class="sb-btn danger" onclick="confirmReset()">🗑 Reset Semua</button>
+    </div>
+    <div class="sb-footer">Auto-save aktif ✓ · CV Builder Pro v6</div>
+  </aside>
+
+  <!-- EDITOR — list of section cards, scrolls naturally -->
+  <main class="editor-panel" id="editorPanel" role="main" aria-label="CV Editor">
+
+    <!-- INFORMASI DASAR -->
+    <article class="sec-card" id="secBasic" onclick="openPanel('basic')" role="button" tabindex="0" aria-label="Edit Informasi Dasar">
+      <div class="sec-header">
+        <div class="sec-icon">👤</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Informasi Dasar</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntBasic">Wajib</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipBasic"><span class="snippet-tag" style="color:var(--tx-3)">Klik untuk mengisi…</span></div>
+    </article>
+
+    <!-- PENGALAMAN KERJA -->
+    <article class="sec-card" id="secExperience" onclick="openPanel('experience')" role="button" tabindex="0" aria-label="Edit Pengalaman Kerja">
+      <div class="sec-header">
+        <div class="sec-icon">💼</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Pengalaman Kerja</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntExperience">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipExperience"><span class="sec-empty-hint" style="border:none;padding:0">Belum ada pengalaman · Klik untuk tambah</span></div>
+    </article>
+
+    <!-- PENDIDIKAN -->
+    <article class="sec-card" id="secEducation" onclick="openPanel('education')" role="button" tabindex="0" aria-label="Edit Pendidikan">
+      <div class="sec-header">
+        <div class="sec-icon">🎓</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Pendidikan</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntEducation">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipEducation"><span style="color:var(--tx-3);font-size:11px">Belum ada pendidikan</span></div>
+    </article>
+
+    <!-- KEAHLIAN -->
+    <article class="sec-card" id="secSkills" onclick="openPanel('skills')" role="button" tabindex="0" aria-label="Edit Keahlian">
+      <div class="sec-header">
+        <div class="sec-icon">⚡</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Keahlian</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntSkills">0 skill</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipSkills"><span style="color:var(--tx-3);font-size:11px">Tambahkan skill: React, Python, Figma…</span></div>
+    </article>
+
+    <!-- PROYEK -->
+    <article class="sec-card" id="secProjects" onclick="openPanel('projects')" role="button" tabindex="0" aria-label="Edit Proyek">
+      <div class="sec-header">
+        <div class="sec-icon">🚀</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Proyek & Portfolio</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntProjects">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipProjects"><span style="color:var(--tx-3);font-size:11px">Tampilkan proyek terbaik kamu</span></div>
+    </article>
+
+    <!-- SERTIFIKAT -->
+    <article class="sec-card" id="secCertificates" onclick="openPanel('certificates')" role="button" tabindex="0" aria-label="Edit Sertifikat">
+      <div class="sec-header">
+        <div class="sec-icon">🏆</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Sertifikat & Lisensi</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntCertificates">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipCertificates"><span style="color:var(--tx-3);font-size:11px">AWS, Google, Meta, dll.</span></div>
+    </article>
+
+    <!-- BAHASA -->
+    <article class="sec-card" id="secLanguages" onclick="openPanel('languages')" role="button" tabindex="0" aria-label="Edit Bahasa">
+      <div class="sec-header">
+        <div class="sec-icon">🌐</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Bahasa</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntLanguages">0 bahasa</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipLanguages"><span style="color:var(--tx-3);font-size:11px">Indonesia, Inggris, dll.</span></div>
+    </article>
+
+    <!-- PRESTASI -->
+    <article class="sec-card" id="secAchievements" onclick="openPanel('achievements')" role="button" tabindex="0" aria-label="Edit Prestasi">
+      <div class="sec-header">
+        <div class="sec-icon">🥇</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Prestasi & Penghargaan</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntAchievements">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipAchievements"><span style="color:var(--tx-3);font-size:11px">Hackathon, beasiswa, penghargaan…</span></div>
+    </article>
+
+    <!-- ORGANISASI -->
+    <article class="sec-card" id="secOrganizations" onclick="openPanel('organizations')" role="button" tabindex="0" aria-label="Edit Organisasi">
+      <div class="sec-header">
+        <div class="sec-icon">🏛️</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Organisasi & Volunteer</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntOrganizations">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipOrganizations"><span style="color:var(--tx-3);font-size:11px">UKM, komunitas, relawan…</span></div>
+    </article>
+
+    <!-- HOBI -->
+    <article class="sec-card" id="secHobbies" onclick="openPanel('hobbies')" role="button" tabindex="0" aria-label="Edit Hobi">
+      <div class="sec-header">
+        <div class="sec-icon">🎯</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Hobi & Minat</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntHobbies">–</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipHobbies"><span style="color:var(--tx-3);font-size:11px">Membaca, fotografi, open source…</span></div>
+    </article>
+
+    <!-- bottom padding for FAB -->
+    <div style="height:80px"></div>
+  </main>
+
+  <!-- LIVE PREVIEW PANE -->
+  <div class="live-preview-pane" id="livePreviewPane">
+    <div class="live-preview-bar">
+      <span class="live-preview-label">▶ LIVE PREVIEW</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="icon-btn" style="width:28px;height:28px;font-size:11px" onclick="zoomLive(-0.08)" title="Zoom out">−</button>
+        <span id="liveZoomLabel" style="font-family:var(--font-pixel);font-size:6px;color:var(--tx-3);min-width:30px;text-align:center">auto</span>
+        <button class="icon-btn" style="width:28px;height:28px;font-size:11px" onclick="zoomLive(0.08)" title="Zoom in">+</button>
+        <button class="icon-btn" style="width:28px;height:28px;font-size:10px" onclick="zoomLiveReset()" title="Reset zoom">⊡</button>
+      </div>
+    </div>
+    <div class="live-preview-scroll" id="livePreviewScroll">
+      <div class="cv-page-live" id="cvPageLive"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== FULL SECTION PANELS ===== -->
+<!-- Each panel covers the editor area fully -->
+
+<!-- PANEL: INFORMASI DASAR -->
+<div class="section-panel" id="panel-basic" role="dialog" aria-modal="true" aria-label="Edit Informasi Dasar">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('basic')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">👤 Informasi Dasar</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="updateCV();closePanel('basic');toast('Tersimpan ✓','success')">Simpan</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="panel-section-label">Foto & Identitas</div>
+    <div class="panel-card">
+      <div class="basic-layout">
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+          <div class="photo-zone" onclick="triggerPhoto()" role="button" tabindex="0">
+            <img id="photoImg" src="" alt="" style="display:none"/>
+            <div class="photo-placeholder" id="photoPlaceholder">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20C4 16.7 7.6 14 12 14S20 16.7 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span>Foto</span>
+            </div>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhoto(this)"/>
+          <button class="btn btn-ghost btn-sm" style="font-size:11px;width:100%" onclick="triggerPhoto()">Ganti Foto</button>
+          <button class="btn btn-ghost btn-sm" style="font-size:11px;width:100%;color:var(--danger)" onclick="removePhoto()">Hapus</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--s3)">
+          <div class="grid-2">
+            <div class="field-group"><label class="field-label" for="fName">Nama Lengkap <span class="field-req">*</span></label><input type="text" id="fName" class="field-input" placeholder="Budi Santoso" oninput="debouncedUpdate()" maxlength="80" autocomplete="name"/></div>
+            <div class="field-group"><label class="field-label" for="fTitle">Jabatan / Profesi</label><input type="text" id="fTitle" class="field-input" placeholder="Software Engineer" oninput="debouncedUpdate()" maxlength="80"/></div>
+          </div>
+          <div class="grid-2">
+            <div class="field-group"><label class="field-label" for="fEmail">Email <span class="field-req">*</span></label><input type="email" id="fEmail" class="field-input" placeholder="budi@email.com" oninput="debouncedUpdate()" autocomplete="email"/></div>
+            <div class="field-group"><label class="field-label" for="fPhone">Telepon</label><input type="tel" id="fPhone" class="field-input" placeholder="+62 812 3456 7890" oninput="debouncedUpdate()" autocomplete="tel"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section-label">Lokasi & Profil Online</div>
+    <div class="panel-card">
+      <div class="grid-3">
+        <div class="field-group"><label class="field-label" for="fLocation">Kota</label><input type="text" id="fLocation" class="field-input" placeholder="Jakarta" oninput="debouncedUpdate()"/></div>
+        <div class="field-group"><label class="field-label" for="fLinkedin">LinkedIn</label><input type="url" id="fLinkedin" class="field-input" placeholder="linkedin.com/in/..." oninput="debouncedUpdate()"/></div>
+        <div class="field-group"><label class="field-label" for="fWebsite">Website / GitHub</label><input type="url" id="fWebsite" class="field-input" placeholder="github.com/..." oninput="debouncedUpdate()"/></div>
+      </div>
+    </div>
+
+    <div class="panel-section-label">Ringkasan Profil (ATS-Critical)</div>
+    <div class="panel-card">
+      <div class="field-group">
+        <label class="field-label" for="fSummary">Ringkasan Diri</label>
+        <textarea id="fSummary" class="field-input field-textarea" placeholder="Deskripsikan pengalaman, keahlian, dan tujuan karir dalam 3–5 kalimat. Gunakan angka konkret: 'Meningkatkan penjualan 30%', 'Memimpin tim 8 orang'…" oninput="debouncedUpdate();countChar('fSummary','sumCount',800)" maxlength="800" rows="5"></textarea>
+        <span class="char-count" id="sumCount">0 / 800</span>
+        <div class="tip-box" style="margin-top:var(--s2)">💡 Summary yang kuat = pembuka CV yang diingat recruiter. Minimal 3 kalimat, maksimal 5. Wajib ada angka konkret.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL: PENGALAMAN KERJA -->
+<div class="section-panel" id="panel-experience" role="dialog" aria-modal="true" aria-label="Edit Pengalaman Kerja">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('experience')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">💼 Pengalaman Kerja</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('experience')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="experienceList" role="list"></div>
+    <div class="empty-state" id="expEmpty"><span class="empty-icon">💼</span>Belum ada pengalaman kerja<br/><small style="font-size:11px">Klik tombol + Tambah di atas</small></div>
+    <div class="tip-box">💡 Urutkan dari yang terbaru. Gunakan bullet "•" di awal baris deskripsi. Sertakan angka nyata di setiap pencapaian.</div>
+  </div>
+</div>
+
+<!-- PANEL: PENDIDIKAN -->
+<div class="section-panel" id="panel-education" role="dialog" aria-modal="true" aria-label="Edit Pendidikan">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('education')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🎓 Pendidikan</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('education')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="educationList" role="list"></div>
+    <div class="empty-state" id="eduEmpty"><span class="empty-icon">🎓</span>Belum ada data pendidikan</div>
+  </div>
+</div>
+
+<!-- PANEL: KEAHLIAN -->
+<div class="section-panel" id="panel-skills" role="dialog" aria-modal="true" aria-label="Edit Keahlian">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('skills')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">⚡ Keahlian</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addSkill()">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div id="skillList" role="list" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div class="empty-state" id="skillEmpty"><span class="empty-icon">⚡</span>Tambahkan skill: React, Python, Figma…</div>
+    <div class="tip-box">💡 Minimal 5–8 skill relevan meningkatkan ATS score secara signifikan.</div>
+  </div>
+</div>
+
+<!-- PANEL: PROYEK -->
+<div class="section-panel" id="panel-projects" role="dialog" aria-modal="true" aria-label="Edit Proyek">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('projects')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🚀 Proyek & Portfolio</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('projects')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="projectsList" role="list"></div>
+    <div class="empty-state" id="projEmpty"><span class="empty-icon">🚀</span>Tampilkan proyek terbaik kamu</div>
+  </div>
+</div>
+
+<!-- PANEL: SERTIFIKAT -->
+<div class="section-panel" id="panel-certificates" role="dialog" aria-modal="true" aria-label="Edit Sertifikat">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('certificates')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🏆 Sertifikat & Lisensi</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('certificates')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="certificatesList" role="list"></div>
+    <div class="empty-state" id="certEmpty"><span class="empty-icon">🏆</span>Tambahkan sertifikat relevan</div>
+  </div>
+</div>
+
+<!-- PANEL: BAHASA -->
+<div class="section-panel" id="panel-languages" role="dialog" aria-modal="true" aria-label="Edit Bahasa">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('languages')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🌐 Bahasa</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addLang()">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div id="languageList" role="list" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div class="empty-state" id="langEmpty"><span class="empty-icon">🌐</span>Tambahkan bahasa yang dikuasai</div>
+  </div>
+</div>
+
+<!-- PANEL: PRESTASI -->
+<div class="section-panel" id="panel-achievements" role="dialog" aria-modal="true" aria-label="Edit Prestasi">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('achievements')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🥇 Prestasi & Penghargaan</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('achievements')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="achievementsList" role="list"></div>
+    <div class="empty-state" id="achEmpty"><span class="empty-icon">🥇</span>Tambahkan prestasi akademik atau profesional</div>
+  </div>
+</div>
+
+<!-- PANEL: ORGANISASI -->
+<div class="section-panel" id="panel-organizations" role="dialog" aria-modal="true" aria-label="Edit Organisasi">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('organizations')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🏛️ Organisasi & Volunteer</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('organizations')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="organizationsList" role="list"></div>
+    <div class="empty-state" id="orgEmpty"><span class="empty-icon">🏛️</span>Tambahkan pengalaman organisasi</div>
+  </div>
+</div>
+
+<!-- PANEL: HOBI -->
+<div class="section-panel" id="panel-hobbies" role="dialog" aria-modal="true" aria-label="Edit Hobi">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('hobbies')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🎯 Hobi & Minat</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="updateCV();closePanel('hobbies');toast('Tersimpan ✓','success')">Simpan</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="panel-card">
+      <div class="field-group">
+        <label class="field-label" for="fHobbies">Hobi & Minat</label>
+        <input type="text" id="fHobbies" class="field-input" placeholder="Membaca, Fotografi, Open Source, Hiking…" oninput="debouncedUpdate()"/>
+        <span class="field-hint">Pisahkan dengan koma. Opsional, tapi bisa jadi ice breaker saat interview.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav" id="mobileNav" aria-label="Navigasi utama">
+  <button class="mnav-btn active" id="mnavEdit" onclick="mnavGo('edit')" aria-label="Editor">
+    <span class="mnav-icon">✏️</span>
+    <span>EDITOR</span>
+  </button>
+  <button class="mnav-btn" id="mnavSettings" onclick="mnavGo('settings')" aria-label="Pengaturan">
+    <span class="mnav-icon">⚙️</span>
+    <span>STYLE</span>
+  </button>
+  <button class="mnav-btn" id="mnavPreview" onclick="openPreview()" aria-label="Preview">
+    <span class="mnav-icon">👁️</span>
+    <span>PREVIEW</span>
+  </button>
+  <button class="mnav-btn primary" id="mnavPDF" onclick="exportPDF()" aria-label="Export PDF">
+    <span class="mnav-icon">⬇️</span>
+    <span>PDF</span>
+  </button>
+</nav>
+
+<!-- FAB -->
+<button class="preview-fab" onclick="openPreview()" aria-label="Preview CV">
+  <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M1 7C2.5 4 4.5 2.5 7 2.5S11.5 4 13 7C11.5 10 9.5 11.5 7 11.5S2.5 10 1 7Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+  Preview CV
+</button>
+
+<!-- PREVIEW MODAL -->
+<div class="preview-modal" id="previewModal" role="dialog" aria-modal="true" aria-label="Preview CV">
+  <div class="preview-toolbar">
+    <span class="preview-info">Preview Live · A4 (210×297mm)</span>
+    <div class="preview-controls">
+      <button class="icon-btn" onclick="zoomPreview(-0.1)">−</button>
+      <span id="zoomLabel" style="font-size:11px;color:var(--tx-3);min-width:38px;text-align:center">–</span>
+      <button class="icon-btn" onclick="zoomPreview(0.1)">+</button>
+      <button class="icon-btn" onclick="zoomReset()" title="Reset zoom">↔</button>
+      <div style="width:1px;height:16px;background:var(--border-med)"></div>
+      <button class="btn btn-primary btn-sm" onclick="exportPDF()">⬇ PDF</button>
+      <button class="icon-btn" onclick="closePreview()">✕</button>
+    </div>
+  </div>
+  <div class="preview-scroll" id="previewWrapper">
+    <!-- cvPage is rendered here via JS clone for display -->
+    <div id="previewClone" class="cv-page" role="document"></div>
+  </div>
+</div>
+
+<!-- CV render target: always in DOM, hidden off-screen, used for both preview and print -->
+<div id="cvPage" class="cv-page" role="document" style="position:fixed;left:-9999px;top:0;visibility:hidden;pointer-events:none"></div>
+
+<!-- MODALS -->
+<div class="modal-backdrop" id="importModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h2 class="modal-title">📂 Import Data CV</h2>
+    <p class="modal-subtitle">Import file CV yang diekspor dari CV Builder Pro ini</p>
+    <div class="import-zone" role="button" tabindex="0" onclick="document.getElementById('jsonInput').click()" ondragover="this.classList.add('over');event.preventDefault()" ondragleave="this.classList.remove('over')" ondrop="handleDrop(event)">
+      <span class="import-icon">📁</span>
+      <p>Klik atau seret file ke sini</p>
+      <p style="font-size:11px;margin-top:4px;color:var(--tx-3)">Hanya menerima file <strong style="color:var(--accent)">.json</strong> dari CV Builder Pro</p>
+      <p style="font-size:11px;margin-top:2px;color:var(--tx-3)">File lain akan <strong style="color:var(--danger)">ditolak</strong></p>
+    </div>
+    <div id="importStatus" style="display:none;margin-top:var(--s3);padding:8px 12px;font-family:var(--font-pixel);font-size:7px;border:2px solid"></div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('importModal')" style="flex:1">Tutup</button></div>
+  </div>
+</div>
+<div class="modal-backdrop" id="confirmModal" role="alertdialog" aria-modal="true">
+  <div class="modal-box">
+    <h2 class="modal-title">Konfirmasi</h2>
+    <p class="modal-subtitle" id="confirmMsg"></p>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="confirmYes" style="flex:1">Ya, Lanjutkan</button>
+      <button class="btn btn-ghost" onclick="closeModal('confirmModal')">Batal</button>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop" id="atsModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h2 class="modal-title" id="atsModalTitle">🤖 ATS Report</h2>
+    <div id="atsModalContent" style="font-size:var(--tx-sm);color:var(--tx-2);line-height:1.8;max-height:360px;overflow-y:auto" aria-live="polite"></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('atsModal')" style="flex:1">Tutup</button></div>
+  </div>
+</div>
+<div class="modal-backdrop" id="cropModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h2 class="modal-title">✂️ Crop Foto Profil</h2>
+    <p class="modal-subtitle">Drag untuk geser · Slider untuk zoom</p>
+    <canvas id="cropCanvas" width="280" height="280" style="display:block;border-radius:var(--r-md);border:1px solid var(--border);cursor:grab;max-width:100%"></canvas>
+    <div style="margin-top:var(--s2);display:flex;align-items:center;gap:var(--s2)">
+      <label class="field-label" style="min-width:40px">Zoom</label>
+      <input type="range" min="1" max="3" step="0.05" value="1" id="cropZoom" class="slider" oninput="drawCrop()"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="applyCrop()" style="flex:1">✓ Terapkan</button>
+      <button class="btn btn-ghost" onclick="closeModal('cropModal')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer" aria-live="assertive" aria-atomic="true"></div>
+<input type="file" id="jsonInput" accept=".json" style="display:none" onchange="handleJSON(this)"/>
+<script src="script.js"></script>
+</body>
+</html>
