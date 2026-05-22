@@ -1,0 +1,2056 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>CV Builder Pro</title>
+<meta name="description" content="Buat CV profesional dengan mudah, export ke PDF langsung dari browser."/>
+
+<style>
+/* =====================================================================
+   CV Builder Pro — Minimalis Theme
+   Clean, modern, no external fonts, GitHub Pages ready
+===================================================================== */
+:root{
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;--s8:32px;
+  --font-ui:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --z-header:100;--z-drawer:200;--z-panel:250;--z-modal:300;--z-toast:400;
+
+  /* Dark palette */
+  --bg-app:#0f1117;
+  --bg-panel:#1a1d27;
+  --bg-surface:#222534;
+  --bg-surface-2:#2a2e40;
+  --bg-surface-3:#333749;
+
+  --border:#2e3248;
+  --border-med:#3d4260;
+  --border-strong:#545a7a;
+
+  --tx:#e8eaf2;
+  --tx-2:#9298b8;
+  --tx-3:#5a6080;
+
+  --accent:#c0392b;
+  --accent-l:rgba(192,57,43,0.12);
+  --accent-b:rgba(192,57,43,0.35);
+
+  --success:#22c55e;
+  --success-l:rgba(34,197,94,0.10);
+  --warning:#f59e0b;
+  --warning-l:rgba(245,158,11,0.10);
+  --danger:#ef4444;
+  --danger-l:rgba(239,68,68,0.12);
+
+  --r:6px;
+  --shadow:0 1px 4px rgba(0,0,0,.35),0 2px 8px rgba(0,0,0,.25);
+  --shadow-md:0 2px 8px rgba(0,0,0,.45),0 4px 16px rgba(0,0,0,.30);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:var(--font-ui);background:var(--bg-app);color:var(--tx);font-size:14px;line-height:1.6;overflow-x:hidden}
+input,textarea,select,button{font-family:var(--font-ui);font-size:inherit}
+button{cursor:pointer;border:none;background:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg-app)}
+::-webkit-scrollbar-thumb{background:var(--border-med);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-strong)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ===================== TOPBAR ===================== */
+.topbar{
+  position:fixed;inset:0 0 auto 0;height:52px;z-index:var(--z-header);
+  background:var(--bg-panel);
+  border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:var(--s2);padding:0 var(--s4);
+}
+.topbar-logo{display:flex;align-items:center;gap:var(--s2);text-decoration:none;flex-shrink:0}
+.logo-mark{
+  width:32px;height:32px;
+  background:var(--accent);border-radius:var(--r);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.logo-text{font-size:13px;font-weight:700;color:var(--tx);white-space:nowrap}
+.logo-text span{color:var(--accent)}
+.topbar-sep{width:1px;height:20px;background:var(--border);margin:0 var(--s1)}
+.topbar-progress{display:flex;align-items:center;gap:var(--s2);flex:1;min-width:0}
+.prog-track{flex:1;max-width:120px;height:6px;background:var(--bg-surface-2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);transition:width .4s ease;width:0%}
+.prog-pct{font-size:11px;color:var(--tx-2);white-space:nowrap}
+.saved-badge{font-size:11px;color:var(--success);opacity:0;transition:opacity .2s;white-space:nowrap;flex-shrink:0}
+.topbar-actions{display:flex;align-items:center;gap:var(--s1);margin-left:auto;flex-shrink:0}
+
+/* ===================== BUTTONS ===================== */
+.icon-btn{
+  width:34px;height:34px;border-radius:var(--r);
+  border:1px solid var(--border);background:var(--bg-surface);
+  color:var(--tx-2);display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;transition:all .15s;
+}
+.icon-btn:hover{background:var(--bg-surface-2);color:var(--accent);border-color:var(--accent)}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;padding:7px 14px;
+  font-size:13px;font-weight:600;border-radius:var(--r);
+  border:1px solid transparent;white-space:nowrap;transition:all .15s;cursor:pointer;
+}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{opacity:.88}
+.btn-pdf{background:#c0392b!important;color:#fff!important;border-color:#c0392b!important}
+.btn-pdf:hover{background:#e74c3c!important;opacity:1!important}
+.btn-secondary{background:var(--bg-surface);color:var(--tx-2);border-color:var(--border)}
+.btn-secondary:hover{background:var(--bg-surface-2);color:var(--tx)}
+.btn-ghost{color:var(--tx-2);border-color:transparent}
+.btn-ghost:hover{background:var(--bg-surface);color:var(--tx)}
+.btn-danger{background:var(--danger-l);color:var(--danger);border-color:var(--danger)}
+.btn-danger:hover{background:var(--danger);color:#fff}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-icon{padding:7px}
+
+/* ===================== LAYOUT ===================== */
+.app-body{
+  display:grid;grid-template-columns:240px 1fr 400px;
+  height:calc(100vh - 52px);margin-top:52px;overflow:hidden;
+}
+
+/* ===================== LIVE PREVIEW ===================== */
+.live-preview-pane{
+  background:#0d0f18;border-left:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;height:100%;
+}
+.live-preview-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 var(--s3);height:36px;flex-shrink:0;
+  background:var(--bg-panel);border-bottom:1px solid var(--border);
+}
+.live-preview-label{font-size:11px;font-weight:600;color:var(--tx-3);letter-spacing:.5px;text-transform:uppercase}
+.live-preview-scroll{
+  flex:1;overflow:auto;display:flex;justify-content:center;
+  align-items:flex-start;padding:16px 12px;overscroll-behavior:contain;
+}
+.cv-page-live{
+  background:#fff;width:210mm;min-height:297mm;flex-shrink:0;
+  transform-origin:top center;box-shadow:var(--shadow-md);overflow:hidden;
+}
+
+/* ===================== SIDEBAR ===================== */
+.sidebar{
+  background:var(--bg-panel);border-right:1px solid var(--border);
+  overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;
+  transition:transform .25s ease;z-index:var(--z-drawer);height:100%;
+  overscroll-behavior:contain;
+}
+.sidebar::-webkit-scrollbar{width:4px}
+.sb-group{padding:var(--s3) var(--s4);border-bottom:1px solid var(--border)}
+.sb-label{
+  font-size:10px;font-weight:700;letter-spacing:1px;color:var(--tx-3);
+  text-transform:uppercase;margin-bottom:var(--s2);
+}
+.tpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+.tpl-card{
+  border:1.5px solid var(--border);border-radius:var(--r);
+  padding:var(--s2) var(--s1);cursor:pointer;text-align:center;
+  font-size:11px;font-weight:600;color:var(--tx-2);
+  transition:all .15s;background:var(--bg-surface);
+}
+.tpl-card:hover{border-color:var(--accent);color:var(--accent)}
+.tpl-card.active{border-color:var(--accent);color:#fff;background:var(--accent)}
+.tpl-thumb{height:28px;margin-bottom:var(--s1);border-radius:3px;overflow:hidden}
+.t-minimal{background:linear-gradient(135deg,#1e2030 60%,#c0392b 60%)}
+.toggle-list{display:flex;flex-direction:column;gap:2px}
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px var(--s2);cursor:pointer;border-radius:var(--r);
+  font-size:12px;color:var(--tx-2);transition:background .15s;user-select:none;
+}
+.toggle-row:hover{background:var(--bg-surface);color:var(--tx)}
+.switch{
+  width:32px;height:18px;background:var(--bg-surface-3);border-radius:9px;
+  position:relative;flex-shrink:0;border:1.5px solid var(--border-med);
+  transition:all .2s;
+}
+.switch.on{background:var(--accent);border-color:var(--accent)}
+.switch::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:10px;height:10px;background:#fff;border-radius:50%;
+  transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.2);
+}
+.switch.on::after{transform:translateX(14px)}
+.swatch-row{display:flex;flex-wrap:wrap;gap:5px}
+.swatch{
+  width:22px;height:22px;cursor:pointer;border-radius:50%;
+  border:2px solid transparent;flex-shrink:0;transition:all .15s;
+}
+.swatch:hover{transform:scale(1.2)}
+.swatch.active{border-color:var(--tx);box-shadow:0 0 0 2px var(--bg-panel),0 0 0 4px var(--tx)}
+.swatch-custom{background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);position:relative}
+.swatch-custom input{position:absolute;inset:0;opacity:0;cursor:pointer;border-radius:50%}
+.slider-row{display:flex;align-items:center;gap:var(--s2);margin-bottom:var(--s1)}
+.slider-label{font-size:11px;color:var(--tx-3);min-width:52px}
+.slider{flex:1;accent-color:var(--accent);cursor:pointer}
+.slider-value{font-size:11px;color:var(--tx-2);min-width:36px;text-align:right}
+.field-select{
+  width:100%;padding:7px 10px;border-radius:var(--r);
+  border:1px solid var(--border-med);background:var(--bg-surface);color:var(--tx);font-size:13px;
+}
+.ats-widget{display:flex;align-items:center;gap:var(--s3)}
+.ats-ring{
+  width:50px;height:50px;border-radius:50%;
+  border:3px solid var(--border-med);display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:var(--tx-2);flex-shrink:0;transition:all .3s;
+}
+.ats-info{flex:1}
+.ats-name{font-size:11px;color:var(--tx-2);margin-bottom:4px}
+.ats-bar{height:5px;background:var(--bg-surface-3);border-radius:3px;overflow:hidden}
+.ats-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .5s ease;width:0%}
+.sb-btn{
+  display:flex;align-items:center;gap:var(--s2);width:100%;
+  padding:8px var(--s2);border-radius:var(--r);
+  border:1px solid var(--border);background:var(--bg-surface);
+  color:var(--tx-2);font-size:12px;cursor:pointer;text-align:left;
+  transition:all .15s;margin-bottom:var(--s1);
+}
+.sb-btn:hover{background:var(--bg-surface-2);color:var(--tx);border-color:var(--border-med)}
+.sb-btn.danger{color:var(--danger);border-color:var(--danger-l)}
+.sb-btn.danger:hover{background:var(--danger-l);border-color:var(--danger)}
+.sb-footer{
+  padding:var(--s3) var(--s4);font-size:10px;color:var(--tx-3);
+  text-align:center;border-top:1px solid var(--border);margin-top:auto;
+}
+
+/* ===================== EDITOR PANEL ===================== */
+.editor-panel{
+  position:relative;overflow-y:auto;overflow-x:hidden;
+  padding:var(--s4) var(--s5);display:flex;flex-direction:column;gap:12px;
+  background:var(--bg-app);height:100%;overscroll-behavior:contain;scroll-behavior:smooth;
+}
+.editor-panel::-webkit-scrollbar{width:4px}
+
+/* ===================== SECTION CARDS ===================== */
+.sec-card{
+  background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--r);
+  cursor:pointer;box-shadow:var(--shadow);transition:all .15s;position:relative;width:100%;
+}
+.sec-card:hover{border-color:var(--accent);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.sec-header{display:flex;align-items:flex-start;gap:var(--s3);padding:var(--s4);user-select:none;min-height:56px;flex-wrap:nowrap}
+.sec-icon{
+  width:34px;height:34px;min-width:34px;border-radius:8px;
+  background:var(--accent-l);display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;margin-top:1px;
+}
+.sec-header-text{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.sec-title{font-size:13px;font-weight:600;color:var(--tx);white-space:normal;word-break:break-word;line-height:1.4}
+.sec-meta{display:flex;align-items:center;gap:6px}
+.sec-count{
+  font-size:10px;color:var(--accent);background:var(--accent-l);
+  border-radius:99px;padding:1px 8px;white-space:nowrap;
+}
+.sec-arrow{font-size:14px;color:var(--tx-3);flex-shrink:0;margin-left:auto;margin-top:2px;align-self:flex-start;transition:color .15s}
+.sec-card:hover .sec-arrow{color:var(--accent)}
+.sec-snippet{
+  padding:0 var(--s4) var(--s3);display:flex;flex-wrap:wrap;gap:4px;
+  border-top:1px solid var(--border);padding-top:var(--s2);
+}
+.snippet-tag{
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:99px;
+  padding:2px 10px;font-size:11px;color:var(--tx-2);word-break:break-word;max-width:100%;
+}
+.sec-empty-hint{font-size:11px;color:var(--tx-3);display:flex;align-items:center;gap:5px}
+
+/* ===================== FULL SECTION PANEL ===================== */
+.section-panel{
+  position:fixed;inset:52px 400px 0 240px;z-index:var(--z-panel);
+  background:var(--bg-app);display:flex;flex-direction:column;
+  transform:translateX(-105%);transition:transform .25s ease,visibility 0s linear .25s;
+  overflow:hidden;border-left:1px solid var(--border);border-right:1px solid var(--border);
+  pointer-events:none;visibility:hidden;
+}
+.section-panel.open{transform:translateX(0);pointer-events:all;visibility:visible;transition:transform .25s ease,visibility 0s linear 0s}
+.panel-topbar{
+  display:flex;align-items:center;gap:var(--s3);padding:0 var(--s4);height:50px;
+  background:var(--bg-panel);border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.panel-back{
+  display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:var(--r);
+  border:1px solid var(--border);background:var(--bg-surface);color:var(--tx-2);
+  font-size:12px;transition:all .15s;
+}
+.panel-back:hover{background:var(--bg-surface-2);color:var(--tx)}
+.panel-title{font-size:14px;font-weight:600;flex:1;color:var(--tx)}
+.panel-actions{display:flex;gap:var(--s1)}
+.panel-body{
+  flex:1;overflow-y:auto;overflow-x:hidden;padding:var(--s5);
+  display:flex;flex-direction:column;gap:var(--s5);overscroll-behavior:contain;scroll-behavior:smooth;
+}
+.panel-body::-webkit-scrollbar{width:4px}
+.panel-body>*{width:100%;max-width:860px}
+
+/* ===================== FORM ELEMENTS ===================== */
+.field-group{display:flex;flex-direction:column;gap:5px}
+.field-label{
+  font-size:11px;font-weight:600;color:var(--tx-2);text-transform:uppercase;letter-spacing:.5px;
+}
+.field-req{color:var(--danger);font-size:12px}
+.field-hint{font-size:11px;color:var(--tx-3);margin-top:2px;padding-left:8px;border-left:2px solid var(--border-med)}
+.char-count{text-align:right;font-size:11px;color:var(--tx-3)}
+.char-count.warning{color:var(--warning)}
+.char-count.danger{color:var(--danger)}
+.field-input,.field-textarea,.field-select-full{
+  width:100%;min-width:0;padding:9px 12px;border-radius:var(--r);
+  border:1px solid var(--border-med);background:var(--bg-panel);color:var(--tx);
+  font-size:14px;transition:border-color .15s,box-shadow .15s;line-height:1.5;box-sizing:border-box;
+}
+.field-input:focus,.field-textarea:focus,.field-select-full:focus{
+  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-l);
+}
+.field-input::placeholder,.field-textarea::placeholder{color:var(--tx-3)}
+.field-textarea{resize:none;overflow:hidden;min-height:90px}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s4)}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s4)}
+.photo-zone{
+  width:88px;height:88px;border-radius:var(--r);
+  border:2px dashed var(--border-med);overflow:hidden;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg-surface);transition:all .15s;flex-shrink:0;
+}
+.photo-zone:hover{border-color:var(--accent);background:var(--accent-l)}
+.photo-zone img{width:100%;height:100%;object-fit:cover}
+.photo-placeholder{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--tx-3)}
+.photo-placeholder svg{width:22px;height:22px}
+.photo-placeholder span{font-size:10px}
+.basic-layout{display:grid;grid-template-columns:100px 1fr;gap:var(--s5);width:100%}
+.dyn-list{display:flex;flex-direction:column;gap:var(--s3);width:100%}
+.dyn-item{
+  border:1px solid var(--border);border-radius:var(--r);overflow:hidden;
+  background:var(--bg-panel);transition:border-color .15s;box-shadow:var(--shadow);width:100%;
+}
+.dyn-item:hover{border-color:var(--border-med)}
+.dyn-item:focus-within{border-color:var(--accent)}
+.dyn-item.collapsed .dyn-body{display:none}
+.dyn-header{
+  display:flex;align-items:center;gap:var(--s2);padding:10px var(--s4);cursor:pointer;
+  min-height:46px;background:var(--bg-surface);border-bottom:1px solid var(--border);
+}
+.dyn-header:hover{background:var(--bg-surface-2)}
+.drag-handle{color:var(--tx-3);font-size:14px;user-select:none;flex-shrink:0}
+.item-title-txt{font-size:12px;font-weight:600;flex:1;color:var(--tx);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item-meta-txt{font-size:11px;color:var(--tx-3);flex-shrink:0;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item-actions{display:flex;gap:3px;flex-shrink:0}
+.mini-btn{
+  width:28px;height:28px;border-radius:4px;
+  border:1px solid var(--border);background:var(--bg-panel);
+  color:var(--tx-3);display:flex;align-items:center;justify-content:center;font-size:12px;
+  transition:all .15s;
+}
+.mini-btn:hover{background:var(--bg-surface-2);color:var(--tx);border-color:var(--border-med)}
+.mini-btn:disabled{opacity:.3;cursor:default}
+.mini-btn.del:hover{background:var(--danger-l);color:var(--danger);border-color:var(--danger)}
+.dyn-body{padding:var(--s4);border-top:1px solid var(--border);display:flex;flex-direction:column;gap:var(--s3)}
+.item-fields{display:grid;gap:var(--s3);width:100%}
+.item-fields.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.skill-row{
+  display:flex;align-items:center;gap:var(--s2);padding:8px var(--s3);
+  border:1px solid var(--border);border-radius:var(--r);background:var(--bg-surface);width:100%;min-width:0;
+}
+.skill-bar-wrap{display:flex;align-items:center;gap:var(--s2);flex:0 0 200px;min-width:0}
+.skill-bar{flex:1;height:6px;background:var(--bg-surface-3);border-radius:3px;overflow:hidden}
+.skill-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s ease}
+.skill-select{font-size:11px;padding:4px 6px;border-radius:4px;border:1px solid var(--border);background:var(--bg-panel);color:var(--tx-2)}
+.add-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;
+  border:1.5px dashed var(--border-med);border-radius:var(--r);
+  background:var(--bg-surface);color:var(--tx-2);font-size:13px;
+  cursor:pointer;transition:all .15s;width:100%;min-height:46px;
+}
+.add-btn:hover{background:var(--accent-l);color:var(--accent);border-color:var(--accent-b)}
+.empty-state{
+  text-align:center;padding:var(--s8) var(--s4);color:var(--tx-3);font-size:13px;line-height:2;
+}
+.empty-icon{font-size:24px;display:block;margin-bottom:var(--s2)}
+.tip-box{
+  display:flex;gap:var(--s2);padding:10px var(--s3);
+  background:#1e1a0e;border:1px solid #4a3d10;border-radius:var(--r);
+  font-size:12px;color:#c9a227;line-height:1.5;
+}
+.panel-section-label{
+  font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--tx-3);margin-bottom:var(--s2);padding-bottom:6px;border-bottom:1px solid var(--border);
+}
+.panel-card{
+  background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--r);
+  padding:var(--s5);display:flex;flex-direction:column;gap:var(--s4);
+  box-shadow:var(--shadow);width:100%;
+}
+
+/* ===================== FAB ===================== */
+.preview-fab{
+  display:none;position:fixed;bottom:20px;right:20px;z-index:var(--z-drawer);
+  background:var(--accent);color:#fff;padding:10px 18px;border-radius:99px;
+  font-size:13px;font-weight:600;box-shadow:var(--shadow-md);
+  align-items:center;gap:7px;transition:all .15s;
+}
+.preview-fab:hover{opacity:.88;transform:translateY(-1px)}
+
+/* ===================== PREVIEW MODAL ===================== */
+.preview-modal{
+  position:fixed;inset:0;z-index:var(--z-modal);background:rgba(0,0,0,.7);
+  display:none;flex-direction:column;align-items:center;padding:48px 0 0;
+}
+.preview-modal.open{display:flex}
+.preview-toolbar{
+  position:fixed;top:0;left:0;right:0;height:48px;z-index:calc(var(--z-modal)+1);
+  background:var(--bg-panel);border-bottom:1px solid var(--border);box-shadow:var(--shadow);
+  display:flex;align-items:center;justify-content:space-between;padding:0 var(--s4);gap:var(--s2);
+}
+.preview-info{font-size:12px;font-weight:600;color:var(--tx-2);flex:1}
+.preview-controls{display:flex;align-items:center;gap:var(--s1)}
+.preview-scroll{
+  flex:1;width:100%;overflow:auto;display:flex;align-items:flex-start;
+  justify-content:center;padding:var(--s4);overscroll-behavior:contain;
+}
+.cv-page{width:210mm;min-height:297mm;background:#fff;box-shadow:var(--shadow-md);transform-origin:top center;overflow:hidden;flex-shrink:0}
+
+/* ===================== MODALS ===================== */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:var(--z-modal);
+  display:flex;align-items:center;justify-content:center;padding:var(--s4);
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.modal-backdrop.open{opacity:1;pointer-events:all}
+.modal-box{
+  background:var(--bg-panel);border-radius:10px;border:1px solid var(--border);
+  padding:var(--s6);width:100%;max-width:440px;max-height:85vh;overflow-y:auto;
+  box-shadow:var(--shadow-md);transform:scale(.97);transition:transform .2s;
+}
+.modal-backdrop.open .modal-box{transform:scale(1)}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:6px;color:var(--tx)}
+.modal-subtitle{font-size:13px;color:var(--tx-2);margin-bottom:var(--s4)}
+.modal-actions{display:flex;gap:var(--s2);margin-top:var(--s4)}
+.import-zone{
+  border:2px dashed var(--border-med);border-radius:var(--r);
+  padding:var(--s8) var(--s6);text-align:center;cursor:pointer;
+  transition:all .15s;color:var(--tx-2);font-size:14px;
+}
+.import-zone:hover,.import-zone.over{border-color:var(--accent);background:var(--accent-l);color:var(--accent)}
+.import-icon{font-size:32px;display:block;margin-bottom:var(--s2)}
+
+/* ===================== TOAST ===================== */
+.toast-container{
+  position:fixed;bottom:var(--s4);right:var(--s4);z-index:var(--z-toast);
+  display:flex;flex-direction:column;gap:var(--s2);pointer-events:none;
+}
+.toast{
+  display:flex;align-items:center;gap:var(--s2);padding:10px 14px;border-radius:var(--r);
+  font-size:12px;border:1px solid;max-width:300px;pointer-events:all;
+  animation:slideUp .15s ease;box-shadow:var(--shadow-md);
+}
+@keyframes slideUp{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+.toast.success{background:#0d1f14;border-color:#1e5c35;color:#4ade80}
+.toast.error{background:#1f0d0d;border-color:#7f1d1d;color:#f87171}
+.toast.warning{background:#1f1a0a;border-color:#78480f;color:#fbbf24}
+.toast.info{background:#0d1626;border-color:#1e3a5f;color:#60a5fa}
+
+/* ===================== CV MINIMAL TEMPLATE ===================== */
+.cv-minimal{font-family:'Arial',sans-serif;color:#1a1a1a;background:#fff;padding:18mm 20mm;line-height:1.6;font-size:9pt}
+.cv-minimal .cvm-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;padding-bottom:10px}
+.cv-minimal .cvm-photo{width:90px;height:90px;object-fit:cover;border-radius:3px;flex-shrink:0;border:1px solid #ddd}
+.cv-minimal .cvm-title-block{flex:1}
+.cv-minimal .cvm-name{font-size:24pt;font-weight:700;color:#111;letter-spacing:-.5px;line-height:1.1;margin-bottom:3px}
+.cv-minimal .cvm-jobtitle{font-size:9.5pt;color:#555;font-weight:400;letter-spacing:.3px}
+.cv-minimal .cvm-contacts{display:flex;flex-wrap:wrap;gap:2px 16px;margin-top:7px;font-size:7.5pt;color:#666}
+.cv-minimal .cvm-divider{height:1px;background:#e0e0e0;margin:10px 0}
+.cv-minimal .cvm-section{margin-bottom:13px}
+.cv-minimal .cvm-sec-label{font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;padding-bottom:3px}
+.cv-minimal .cvm-row{display:grid;grid-template-columns:1fr auto;align-items:baseline;column-gap:10px;margin-bottom:1px}
+.cv-minimal .cvm-pos{font-size:9.5pt;font-weight:700;color:#111}
+.cv-minimal .cvm-date{font-size:7.5pt;color:#888;white-space:nowrap}
+.cv-minimal .cvm-company{font-size:8.5pt;color:#555;margin-bottom:2px}
+.cv-minimal .cvm-desc{font-size:8pt;color:#444;line-height:1.55;margin-bottom:1px}
+.cv-minimal .cvm-bullet-m{padding-left:10px;position:relative;font-size:8pt;color:#444;line-height:1.5;margin-bottom:1px}
+.cv-minimal .cvm-bullet-m::before{content:"–";position:absolute;left:0;color:#aaa}
+.cv-minimal .cvm-tags{display:flex;flex-wrap:wrap;gap:3px}
+.cv-minimal .cvm-tag{font-size:8pt;padding:1px 7px;border:1px solid #ddd;color:#444;border-radius:3px}
+.cv-minimal .cvm-lang-row{display:flex;justify-content:space-between;font-size:8.5pt;margin-bottom:3px;padding-bottom:3px;border-bottom:1px dotted #eee}
+.cv-minimal .cvm-lang-row:last-child{border-bottom:none}
+
+/* ===================== SIDEBAR OVERLAY ===================== */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:calc(var(--z-drawer) - 1)}
+.sidebar-overlay.show{display:block}
+
+/* ===================== PRINT ===================== */
+@page{size:A4;margin:0}
+@media print{
+  *{visibility:hidden}
+  #printTarget,#printTarget *{visibility:visible}
+  #printTarget{position:fixed!important;inset:0!important;width:210mm!important;height:297mm!important;overflow:hidden!important;background:#fff!important}
+  #printTarget .cv-page{transform:none!important;box-shadow:none!important;width:210mm!important;min-height:297mm!important;margin:0!important;padding:0!important}
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media(max-width:1100px){
+  .app-body{grid-template-columns:240px 1fr}
+  .live-preview-pane{display:none}
+  .section-panel{inset:52px 0 0 240px;transform:translateX(-105%);pointer-events:none;visibility:hidden}
+  .section-panel.open{pointer-events:all;visibility:visible}
+}
+
+/* ===================== MOBILE BOTTOM NAV ===================== */
+.mobile-nav{
+  display:none;position:fixed;bottom:0;left:0;right:0;height:56px;
+  z-index:calc(var(--z-header) + 10);background:var(--bg-panel);
+  border-top:1px solid var(--border);box-shadow:0 -2px 8px rgba(0,0,0,.08);
+  grid-template-columns:repeat(4,1fr);align-items:stretch;
+}
+.mnav-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;padding:6px 4px;font-size:9px;font-weight:600;color:var(--tx-3);
+  background:none;border:none;cursor:pointer;border-right:1px solid var(--border);
+  transition:all .15s;-webkit-tap-highlight-color:transparent;min-height:56px;
+}
+.mnav-btn:last-child{border-right:none}
+.mnav-btn .mnav-icon{font-size:18px;line-height:1}
+.mnav-btn.active{color:var(--accent)}
+.mnav-btn.primary{color:#fff;background:var(--accent)}
+
+/* ===================== MOBILE ===================== */
+@media(max-width:768px){
+  .topbar{height:50px;padding:0 var(--s3);gap:var(--s2)}
+  .topbar-sep,.prog-track,.prog-pct,.saved-badge{display:none}
+  .logo-text{font-size:13px}
+  .topbar-actions .btn-secondary,.topbar-actions .btn-primary{display:none}
+  .app-body{grid-template-columns:1fr;overflow:visible;margin-top:50px;height:calc(100vh - 50px - 56px)}
+  .live-preview-pane{display:none}
+  .sidebar{position:fixed;left:0;top:50px;bottom:56px;width:min(300px,88vw);transform:translateX(-110%);z-index:var(--z-drawer)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay{z-index:calc(var(--z-drawer) - 1)}
+  .editor-panel{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:var(--s3) var(--s3) var(--s4);gap:10px}
+  .sec-header{min-height:60px;padding:var(--s3)}
+  .sec-title{font-size:13px}
+  .section-panel{inset:50px 0 56px 0;pointer-events:none;visibility:hidden}
+  .section-panel.open{pointer-events:all;visibility:visible}
+  .panel-topbar{height:46px;padding:0 var(--s3);gap:var(--s2)}
+  .panel-body{padding:var(--s3);gap:var(--s3)}
+  .panel-body>*{max-width:100%}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .basic-layout{grid-template-columns:1fr}
+  .item-fields.cols-2{grid-template-columns:1fr}
+  .field-input,.field-textarea,.field-select-full{font-size:16px;padding:9px 12px}
+  .skill-bar-wrap{flex:0 0 120px}
+  .skill-row{flex-wrap:wrap}
+  .dyn-header{min-height:50px;padding:10px var(--s3)}
+  .basic-layout .photo-zone{margin:0 auto}
+  .modal-box{padding:var(--s4);max-width:100%}
+  .toast-container{bottom:64px;right:var(--s3);left:var(--s3)}
+  .toast{max-width:100%}
+  .preview-fab{display:none!important}
+  .mobile-nav{display:grid}
+  #editorPanel > div:last-child{height:12px}
+}
+@media(max-width:400px){
+  .topbar{padding:0 var(--s2)}
+  .logo-text{font-size:12px}
+  .logo-mark{width:28px;height:28px;font-size:10px}
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- ===== WELCOME / DEVICE WARNING MODAL ===== -->
+<div class="modal-backdrop open" id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+  <div class="modal-box" style="max-width:480px;padding:0;overflow:hidden">
+    <div style="padding:20px 24px 16px;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">&#128161;</div>
+        <div>
+          <div id="welcomeTitle" style="font-size:15px;font-weight:700;color:var(--tx)">Tips Penggunaan CV Builder Pro</div>
+          <div style="font-size:11px;color:var(--tx-3);margin-top:1px" id="welcomeDeviceLabel"></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:20px 24px" id="welcomeBody">
+      <div id="tipDesktop" style="display:none">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-surface);border-radius:8px;border:1px solid var(--border);margin-bottom:12px">
+          <span style="font-size:22px;flex-shrink:0">&#128187;</span>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px">Kamu di Laptop / Desktop</div>
+            <div style="font-size:12px;color:var(--tx-2);line-height:1.6">
+              Pengalaman terbaik! Isi data CV kamu, lalu langsung <strong style="color:var(--tx)">Print</strong> atau <strong style="color:var(--tx)">Unduh PDF</strong> dengan klik tombol di pojok kanan atas.
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;padding:12px 14px;background:var(--success-l);border-radius:8px;border:1px solid rgba(34,197,94,0.2)">
+          <span style="font-size:16px;flex-shrink:0">&#9989;</span>
+          <div style="font-size:12px;color:var(--tx-2);line-height:1.6">Gunakan <strong style="color:var(--tx)">Export JSON</strong> di sidebar untuk backup data CV kamu kapan saja.</div>
+        </div>
+      </div>
+      <div id="tipMobile" style="display:none">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-surface);border-radius:8px;border:1px solid var(--border);margin-bottom:10px">
+          <span style="font-size:22px;flex-shrink:0">&#128241;</span>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px">Kamu di Perangkat Mobile</div>
+            <div style="font-size:12px;color:var(--tx-2);line-height:1.6">
+              Untuk hasil terbaik, <strong style="color:var(--accent)">Print &amp; Download PDF lebih baik dilakukan di laptop/desktop</strong> karena tampilan lebih optimal.
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:var(--accent-l);border-radius:8px;border:1px solid var(--accent-b)">
+            <span style="font-size:16px;flex-shrink:0">&#128190;</span>
+            <div style="font-size:12px;color:var(--tx-2);line-height:1.6">
+              <strong style="color:var(--tx)">Rekomendasi workflow mobile:</strong><br>
+              Isi semua data CV di sini &#8594; klik <strong style="color:var(--tx)">Export JSON</strong> untuk simpan &#8594; buka di laptop &#8594; Import JSON &#8594; Print / Unduh PDF.
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:var(--bg-surface);border-radius:8px;border:1px solid var(--border)">
+            <span style="font-size:16px;flex-shrink:0">&#128228;</span>
+            <div style="font-size:12px;color:var(--tx-2);line-height:1.6">
+              Tombol <strong style="color:var(--tx)">Export JSON</strong> ada di menu sidebar (ikon &#8801; kiri atas). File JSON bisa disimpan ke Google Drive atau kirim ke diri sendiri via WhatsApp.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:14px 24px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;color:var(--tx-3);user-select:none">
+        <input type="checkbox" id="welcomeDontShow" style="accent-color:var(--accent);width:14px;height:14px">
+        Jangan tampilkan lagi
+      </label>
+      <button class="btn btn-primary btn-sm" onclick="closeWelcome()" style="min-width:100px">Mengerti &#10003;</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== TOPBAR ===== -->
+<header class="topbar" role="banner">
+  <button class="icon-btn" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Menu" aria-expanded="false" style="font-size:14px">≡</button>
+  <a href="#" class="topbar-logo">
+    <div class="logo-mark">CV</div>
+    <span class="logo-text">Builder<span>.Pro</span></span>
+  </a>
+  <div class="topbar-sep"></div>
+  <div class="topbar-progress">
+    <div class="prog-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+      <div class="prog-fill" id="progressFill"></div>
+    </div>
+    <span class="prog-pct" id="progressPct" aria-live="polite">0%</span>
+    <span class="saved-badge" id="savedBadge" aria-live="polite">✓ SAVED</span>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" onclick="doUndo()" title="Undo (Ctrl+Z)" aria-label="Undo" >↩</button>
+    <button class="icon-btn" onclick="doRedo()" title="Redo (Ctrl+Y)" aria-label="Redo" >↪</button>
+    <button class="btn btn-secondary btn-sm" onclick="openPreview()" >▶ Preview</button>
+    <button class="btn btn-pdf btn-sm" onclick="exportPDF()" >⬇ Unduh PDF</button>
+  </div>
+</header>
+
+<!-- ===== APP BODY ===== -->
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="mainSidebar" role="complementary" aria-label="Pengaturan">
+    <div class="sb-group">
+      <div class="sb-label">Template CV</div>
+      <div class="tpl-grid" role="radiogroup">
+        <div class="tpl-card active" data-th="minimal" role="radio" aria-checked="true" tabindex="0" onclick="setTheme('minimal')"><div class="tpl-thumb t-minimal"></div>Professional</div>
+      </div>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">Tampilkan Section</div>
+      <div class="toggle-list" id="sectionToggles" role="group"></div>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">Warna Aksen CV</div>
+      <div class="swatch-row" role="radiogroup" id="swatches" style="gap:8px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div class="swatch" data-c="#1B4F8A" style="background:#1B4F8A;width:26px;height:26px" role="radio" tabindex="0" onclick="setAccent('#1B4F8A')"></div>
+          <span style="font-size:10px;color:var(--tx-3)">Navy</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div class="swatch" data-c="#2E7D32" style="background:#2E7D32;width:26px;height:26px" role="radio" tabindex="0" onclick="setAccent('#2E7D32')"></div>
+          <span style="font-size:10px;color:var(--tx-3)">Green</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div class="swatch" data-c="#7B1FA2" style="background:#7B1FA2;width:26px;height:26px" role="radio" tabindex="0" onclick="setAccent('#7B1FA2')"></div>
+          <span style="font-size:10px;color:var(--tx-3)">Purple</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div class="swatch active" data-c="#8B1A1A" style="background:#8B1A1A;width:26px;height:26px" role="radio" aria-checked="true" tabindex="0" onclick="setAccent('#8B1A1A')"></div>
+          <span style="font-size:10px;color:var(--tx-3)">Maroon</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          <div class="swatch" data-c="#1a1a1a" style="background:#1a1a1a;border-color:var(--border-med);width:26px;height:26px" role="radio" tabindex="0" onclick="setAccent('#1a1a1a')"></div>
+          <span style="font-size:10px;color:var(--tx-3)">Black</span>
+        </div>
+      </div>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">Font & Layout</div>
+      <select class="field-select" id="fontSelect" onchange="setFont(this.value)" style="margin-bottom:var(--s3)">
+        <option value="Arial">Arial (ATS-Safe ✓)</option>
+        <option value="Calibri">Calibri (ATS-Safe ✓)</option>
+        <option value="Verdana">Verdana (ATS-Safe ✓)</option>
+        <option value="Georgia">Georgia (Serif)</option>
+      </select>
+      <div class="slider-row"><span class="slider-label">Spasi</span><input type="range" min="1.2" max="2.2" step="0.1" value="1.55" class="slider" id="spacingSlider" oninput="setSpacing(this.value)"/><span class="slider-value" id="spacingVal">1.55</span></div>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">ATS Score</div>
+      <div class="ats-widget">
+        <div class="ats-ring" id="atsRing"><span id="atsScore">–</span></div>
+        <div class="ats-info">
+          <div class="ats-name" id="atsLabel">Belum dicek</div>
+          <div class="ats-bar"><div class="ats-fill" id="atsFill"></div></div>
+        </div>
+      </div>
+      <button class="sb-btn" style="margin-top:var(--s2)" onclick="runATSCheck()">✓ Cek Skor ATS</button>
+      <div id="atsTips" aria-live="polite"></div>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">Data CV</div>
+      <button class="sb-btn" onclick="fillSampleData()">✨ Isi Data Contoh</button>
+      <button class="sb-btn" onclick="openImport()">↑ Import JSON</button>
+      <button class="sb-btn" onclick="exportJSON()">↓ Export JSON</button>
+      <button class="sb-btn danger" onclick="confirmReset()">🗑 Reset Semua</button>
+    </div>
+    <div class="sb-footer">Auto-save aktif ✓ · CV Builder Pro v6</div>
+  </aside>
+
+  <!-- EDITOR — list of section cards, scrolls naturally -->
+  <main class="editor-panel" id="editorPanel" role="main" aria-label="CV Editor">
+
+    <!-- INFORMASI DASAR -->
+    <article class="sec-card" id="secBasic" onclick="openPanel('basic')" role="button" tabindex="0" aria-label="Edit Informasi Dasar">
+      <div class="sec-header">
+        <div class="sec-icon">👤</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Informasi Dasar</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntBasic">Wajib</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipBasic"><span class="snippet-tag" style="color:var(--tx-3)">Klik untuk mengisi…</span></div>
+    </article>
+
+    <!-- PENGALAMAN KERJA -->
+    <article class="sec-card" id="secExperience" onclick="openPanel('experience')" role="button" tabindex="0" aria-label="Edit Pengalaman Kerja">
+      <div class="sec-header">
+        <div class="sec-icon">💼</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Pengalaman Kerja</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntExperience">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipExperience"><span class="sec-empty-hint" style="border:none;padding:0">Belum ada pengalaman · Klik untuk tambah</span></div>
+    </article>
+
+    <!-- PENDIDIKAN -->
+    <article class="sec-card" id="secEducation" onclick="openPanel('education')" role="button" tabindex="0" aria-label="Edit Pendidikan">
+      <div class="sec-header">
+        <div class="sec-icon">🎓</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Pendidikan</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntEducation">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipEducation"><span style="color:var(--tx-3);font-size:11px">Belum ada pendidikan</span></div>
+    </article>
+
+    <!-- KEAHLIAN -->
+    <article class="sec-card" id="secSkills" onclick="openPanel('skills')" role="button" tabindex="0" aria-label="Edit Keahlian">
+      <div class="sec-header">
+        <div class="sec-icon">⚡</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Keahlian</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntSkills">0 skill</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipSkills"><span style="color:var(--tx-3);font-size:11px">Tambahkan skill: React, Python, Figma…</span></div>
+    </article>
+
+    <!-- PROYEK -->
+    <article class="sec-card" id="secProjects" onclick="openPanel('projects')" role="button" tabindex="0" aria-label="Edit Proyek">
+      <div class="sec-header">
+        <div class="sec-icon">🚀</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Proyek & Portfolio</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntProjects">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipProjects"><span style="color:var(--tx-3);font-size:11px">Tampilkan proyek terbaik kamu</span></div>
+    </article>
+
+    <!-- SERTIFIKAT -->
+    <article class="sec-card" id="secCertificates" onclick="openPanel('certificates')" role="button" tabindex="0" aria-label="Edit Sertifikat">
+      <div class="sec-header">
+        <div class="sec-icon">🏆</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Sertifikat & Lisensi</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntCertificates">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipCertificates"><span style="color:var(--tx-3);font-size:11px">AWS, Google, Meta, dll.</span></div>
+    </article>
+
+    <!-- BAHASA -->
+    <article class="sec-card" id="secLanguages" onclick="openPanel('languages')" role="button" tabindex="0" aria-label="Edit Bahasa">
+      <div class="sec-header">
+        <div class="sec-icon">🌐</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Bahasa</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntLanguages">0 bahasa</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipLanguages"><span style="color:var(--tx-3);font-size:11px">Indonesia, Inggris, dll.</span></div>
+    </article>
+
+    <!-- PRESTASI -->
+    <article class="sec-card" id="secAchievements" onclick="openPanel('achievements')" role="button" tabindex="0" aria-label="Edit Prestasi">
+      <div class="sec-header">
+        <div class="sec-icon">🥇</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Prestasi & Penghargaan</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntAchievements">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipAchievements"><span style="color:var(--tx-3);font-size:11px">Hackathon, beasiswa, penghargaan…</span></div>
+    </article>
+
+    <!-- ORGANISASI -->
+    <article class="sec-card" id="secOrganizations" onclick="openPanel('organizations')" role="button" tabindex="0" aria-label="Edit Organisasi">
+      <div class="sec-header">
+        <div class="sec-icon">🏛️</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Organisasi & Volunteer</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntOrganizations">0 item</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipOrganizations"><span style="color:var(--tx-3);font-size:11px">UKM, komunitas, relawan…</span></div>
+    </article>
+
+    <!-- HOBI -->
+    <article class="sec-card" id="secHobbies" onclick="openPanel('hobbies')" role="button" tabindex="0" aria-label="Edit Hobi">
+      <div class="sec-header">
+        <div class="sec-icon">🎯</div>
+        <div class="sec-header-text">
+          <h2 class="sec-title">Hobi & Minat</h2>
+          <div class="sec-meta"><span class="sec-count" id="cntHobbies">–</span></div>
+        </div>
+        <span class="sec-arrow">→</span>
+      </div>
+      <div class="sec-snippet" id="snipHobbies"><span style="color:var(--tx-3);font-size:11px">Membaca, fotografi, open source…</span></div>
+    </article>
+
+    <!-- bottom padding for FAB -->
+    <div style="height:80px"></div>
+  </main>
+
+  <!-- LIVE PREVIEW PANE -->
+  <div class="live-preview-pane" id="livePreviewPane">
+    <div class="live-preview-bar">
+      <span class="live-preview-label">Live Preview</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="icon-btn" style="width:28px;height:28px;font-size:11px" onclick="zoomLive(-0.08)" title="Zoom out">−</button>
+        <span id="liveZoomLabel" style="font-size:11px;color:var(--tx-3);min-width:30px;text-align:center">auto</span>
+        <button class="icon-btn" style="width:28px;height:28px;font-size:11px" onclick="zoomLive(0.08)" title="Zoom in">+</button>
+        <button class="icon-btn" style="width:28px;height:28px;font-size:10px" onclick="zoomLiveReset()" title="Reset zoom">⊡</button>
+      </div>
+    </div>
+    <div class="live-preview-scroll" id="livePreviewScroll">
+      <div class="cv-page-live" id="cvPageLive"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== FULL SECTION PANELS ===== -->
+<!-- Each panel covers the editor area fully -->
+
+<!-- PANEL: INFORMASI DASAR -->
+<div class="section-panel" id="panel-basic" role="dialog" aria-modal="true" aria-label="Edit Informasi Dasar">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('basic')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">👤 Informasi Dasar</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="updateCV();closePanel('basic');toast('Tersimpan ✓','success')">Simpan</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="panel-section-label">Foto & Identitas</div>
+    <div class="panel-card">
+      <div class="basic-layout">
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+          <div class="photo-zone" onclick="triggerPhoto()" role="button" tabindex="0">
+            <img id="photoImg" src="" alt="" style="display:none"/>
+            <div class="photo-placeholder" id="photoPlaceholder">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20C4 16.7 7.6 14 12 14S20 16.7 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span>Foto</span>
+            </div>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhoto(this)"/>
+          <button class="btn btn-ghost btn-sm" style="font-size:11px;width:100%" onclick="triggerPhoto()">Ganti Foto</button>
+          <button class="btn btn-ghost btn-sm" style="font-size:11px;width:100%;color:var(--danger)" onclick="removePhoto()">Hapus</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--s3)">
+          <div class="grid-2">
+            <div class="field-group"><label class="field-label" for="fName">Nama Lengkap <span class="field-req">*</span></label><input type="text" id="fName" class="field-input" placeholder="Budi Santoso" oninput="debouncedUpdate()" maxlength="80" autocomplete="name"/></div>
+            <div class="field-group"><label class="field-label" for="fTitle">Jabatan / Profesi</label><input type="text" id="fTitle" class="field-input" placeholder="Software Engineer" oninput="debouncedUpdate()" maxlength="80"/></div>
+          </div>
+          <div class="grid-2">
+            <div class="field-group"><label class="field-label" for="fEmail">Email <span class="field-req">*</span></label><input type="email" id="fEmail" class="field-input" placeholder="budi@email.com" oninput="debouncedUpdate()" autocomplete="email"/></div>
+            <div class="field-group"><label class="field-label" for="fPhone">Telepon</label><input type="tel" id="fPhone" class="field-input" placeholder="+62 812 3456 7890" oninput="debouncedUpdate()" autocomplete="tel"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section-label">Lokasi & Profil Online</div>
+    <div class="panel-card">
+      <div class="grid-3">
+        <div class="field-group"><label class="field-label" for="fLocation">Kota</label><input type="text" id="fLocation" class="field-input" placeholder="Jakarta" oninput="debouncedUpdate()"/></div>
+        <div class="field-group"><label class="field-label" for="fLinkedin">LinkedIn</label><input type="url" id="fLinkedin" class="field-input" placeholder="linkedin.com/in/..." oninput="debouncedUpdate()"/></div>
+        <div class="field-group"><label class="field-label" for="fWebsite">Website / GitHub</label><input type="url" id="fWebsite" class="field-input" placeholder="github.com/..." oninput="debouncedUpdate()"/></div>
+      </div>
+    </div>
+
+    <div class="panel-section-label">Ringkasan Profil (ATS-Critical)</div>
+    <div class="panel-card">
+      <div class="field-group">
+        <label class="field-label" for="fSummary">Ringkasan Diri</label>
+        <textarea id="fSummary" class="field-input field-textarea" placeholder="Deskripsikan pengalaman, keahlian, dan tujuan karir dalam 3–5 kalimat. Gunakan angka konkret: 'Meningkatkan penjualan 30%', 'Memimpin tim 8 orang'…" oninput="debouncedUpdate();countChar('fSummary','sumCount',800)" maxlength="800" rows="5"></textarea>
+        <span class="char-count" id="sumCount">0 / 800</span>
+        <div class="tip-box" style="margin-top:var(--s2)">💡 Summary yang kuat = pembuka CV yang diingat recruiter. Minimal 3 kalimat, maksimal 5. Wajib ada angka konkret.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL: PENGALAMAN KERJA -->
+<div class="section-panel" id="panel-experience" role="dialog" aria-modal="true" aria-label="Edit Pengalaman Kerja">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('experience')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">💼 Pengalaman Kerja</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('experience')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="experienceList" role="list"></div>
+    <div class="empty-state" id="expEmpty"><span class="empty-icon">💼</span>Belum ada pengalaman kerja<br/><small style="font-size:11px">Klik tombol + Tambah di atas</small></div>
+    <div class="tip-box">💡 Urutkan dari yang terbaru. Gunakan bullet "•" di awal baris deskripsi. Sertakan angka nyata di setiap pencapaian.</div>
+  </div>
+</div>
+
+<!-- PANEL: PENDIDIKAN -->
+<div class="section-panel" id="panel-education" role="dialog" aria-modal="true" aria-label="Edit Pendidikan">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('education')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🎓 Pendidikan</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('education')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="educationList" role="list"></div>
+    <div class="empty-state" id="eduEmpty"><span class="empty-icon">🎓</span>Belum ada data pendidikan</div>
+  </div>
+</div>
+
+<!-- PANEL: KEAHLIAN -->
+<div class="section-panel" id="panel-skills" role="dialog" aria-modal="true" aria-label="Edit Keahlian">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('skills')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">⚡ Keahlian</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addSkill()">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div id="skillList" role="list" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div class="empty-state" id="skillEmpty"><span class="empty-icon">⚡</span>Tambahkan skill: React, Python, Figma…</div>
+    <div class="tip-box">💡 Minimal 5–8 skill relevan meningkatkan ATS score secara signifikan.</div>
+  </div>
+</div>
+
+<!-- PANEL: PROYEK -->
+<div class="section-panel" id="panel-projects" role="dialog" aria-modal="true" aria-label="Edit Proyek">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('projects')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🚀 Proyek & Portfolio</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('projects')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="projectsList" role="list"></div>
+    <div class="empty-state" id="projEmpty"><span class="empty-icon">🚀</span>Tampilkan proyek terbaik kamu</div>
+  </div>
+</div>
+
+<!-- PANEL: SERTIFIKAT -->
+<div class="section-panel" id="panel-certificates" role="dialog" aria-modal="true" aria-label="Edit Sertifikat">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('certificates')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🏆 Sertifikat & Lisensi</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('certificates')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="certificatesList" role="list"></div>
+    <div class="empty-state" id="certEmpty"><span class="empty-icon">🏆</span>Tambahkan sertifikat relevan</div>
+  </div>
+</div>
+
+<!-- PANEL: BAHASA -->
+<div class="section-panel" id="panel-languages" role="dialog" aria-modal="true" aria-label="Edit Bahasa">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('languages')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🌐 Bahasa</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addLang()">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div id="languageList" role="list" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div class="empty-state" id="langEmpty"><span class="empty-icon">🌐</span>Tambahkan bahasa yang dikuasai</div>
+  </div>
+</div>
+
+<!-- PANEL: PRESTASI -->
+<div class="section-panel" id="panel-achievements" role="dialog" aria-modal="true" aria-label="Edit Prestasi">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('achievements')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🥇 Prestasi & Penghargaan</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('achievements')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="achievementsList" role="list"></div>
+    <div class="empty-state" id="achEmpty"><span class="empty-icon">🥇</span>Tambahkan prestasi akademik atau profesional</div>
+  </div>
+</div>
+
+<!-- PANEL: ORGANISASI -->
+<div class="section-panel" id="panel-organizations" role="dialog" aria-modal="true" aria-label="Edit Organisasi">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('organizations')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🏛️ Organisasi & Volunteer</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="addItem('organizations')">+ Tambah</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="dyn-list" id="organizationsList" role="list"></div>
+    <div class="empty-state" id="orgEmpty"><span class="empty-icon">🏛️</span>Tambahkan pengalaman organisasi</div>
+  </div>
+</div>
+
+<!-- PANEL: HOBI -->
+<div class="section-panel" id="panel-hobbies" role="dialog" aria-modal="true" aria-label="Edit Hobi">
+  <div class="panel-topbar">
+    <button class="panel-back" onclick="closePanel('hobbies')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Kembali
+    </button>
+    <span class="panel-title">🎯 Hobi & Minat</span>
+    <div class="panel-actions">
+      <button class="btn btn-primary btn-sm" onclick="updateCV();closePanel('hobbies');toast('Tersimpan ✓','success')">Simpan</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="panel-card">
+      <div class="field-group">
+        <label class="field-label" for="fHobbies">Hobi & Minat</label>
+        <input type="text" id="fHobbies" class="field-input" placeholder="Membaca, Fotografi, Open Source, Hiking…" oninput="debouncedUpdate()"/>
+        <span class="field-hint">Pisahkan dengan koma. Opsional, tapi bisa jadi ice breaker saat interview.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav" id="mobileNav" aria-label="Navigasi utama">
+  <button class="mnav-btn active" id="mnavEdit" onclick="mnavGo('edit')" aria-label="Editor">
+    <span class="mnav-icon">✏️</span>
+    <span>EDITOR</span>
+  </button>
+  <button class="mnav-btn" id="mnavSettings" onclick="mnavGo('settings')" aria-label="Pengaturan">
+    <span class="mnav-icon">⚙️</span>
+    <span>STYLE</span>
+  </button>
+  <button class="mnav-btn" id="mnavPreview" onclick="openPreview()" aria-label="Preview">
+    <span class="mnav-icon">👁️</span>
+    <span>PREVIEW</span>
+  </button>
+  <button class="mnav-btn primary" id="mnavPDF" onclick="exportPDF()" aria-label="Export PDF">
+    <span class="mnav-icon">⬇️</span>
+    <span>UNDUH</span>
+  </button>
+</nav>
+
+<!-- FAB -->
+<button class="preview-fab" onclick="openPreview()" aria-label="Preview CV">
+  <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M1 7C2.5 4 4.5 2.5 7 2.5S11.5 4 13 7C11.5 10 9.5 11.5 7 11.5S2.5 10 1 7Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+  Preview CV
+</button>
+
+<!-- PREVIEW MODAL -->
+<div class="preview-modal" id="previewModal" role="dialog" aria-modal="true" aria-label="Preview CV">
+  <div class="preview-toolbar">
+    <span class="preview-info">Preview Live · A4 (210×297mm)</span>
+    <div class="preview-controls">
+      <button class="icon-btn" onclick="zoomPreview(-0.1)">−</button>
+      <span id="zoomLabel" style="font-size:11px;color:var(--tx-3);min-width:38px;text-align:center">–</span>
+      <button class="icon-btn" onclick="zoomPreview(0.1)">+</button>
+      <button class="icon-btn" onclick="zoomReset()" title="Reset zoom">↔</button>
+      <div style="width:1px;height:16px;background:var(--border-med)"></div>
+      <button class="btn btn-pdf btn-sm" onclick="exportPDF()">⬇ Unduh PDF</button>
+      <button class="icon-btn" onclick="closePreview()">✕</button>
+    </div>
+  </div>
+  <div class="preview-scroll" id="previewWrapper">
+    <!-- cvPage is rendered here via JS clone for display -->
+    <div id="previewClone" class="cv-page" role="document"></div>
+  </div>
+</div>
+
+<!-- CV render target: always in DOM, hidden off-screen, used for both preview and print -->
+<div id="cvPage" class="cv-page" role="document" style="position:fixed;left:-9999px;top:0;visibility:hidden;pointer-events:none"></div>
+
+<!-- MODALS -->
+<div class="modal-backdrop" id="importModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h2 class="modal-title">📂 Import Data CV</h2>
+    <p class="modal-subtitle">Import file CV yang diekspor dari CV Builder Pro ini</p>
+    <div class="import-zone" role="button" tabindex="0" onclick="document.getElementById('jsonInput').click()" ondragover="this.classList.add('over');event.preventDefault()" ondragleave="this.classList.remove('over')" ondrop="handleDrop(event)">
+      <span class="import-icon">📁</span>
+      <p>Klik atau seret file ke sini</p>
+      <p style="font-size:11px;margin-top:4px;color:var(--tx-3)">Hanya menerima file <strong style="color:var(--accent)">.json</strong> dari CV Builder Pro</p>
+      <p style="font-size:11px;margin-top:2px;color:var(--tx-3)">File lain akan <strong style="color:var(--danger)">ditolak</strong></p>
+    </div>
+    <div id="importStatus" style="display:none;margin-top:var(--s3);padding:8px 12px;font-size:12px;border-radius:6px;border:1px solid"></div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('importModal')" style="flex:1">Tutup</button></div>
+  </div>
+</div>
+<div class="modal-backdrop" id="confirmModal" role="alertdialog" aria-modal="true">
+  <div class="modal-box">
+    <h2 class="modal-title">Konfirmasi</h2>
+    <p class="modal-subtitle" id="confirmMsg"></p>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="confirmYes" style="flex:1">Ya, Lanjutkan</button>
+      <button class="btn btn-ghost" onclick="closeModal('confirmModal')">Batal</button>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop" id="atsModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h2 class="modal-title" id="atsModalTitle">🤖 ATS Report</h2>
+    <div id="atsModalContent" style="font-size:13px;color:var(--tx-2);line-height:1.8;max-height:360px;overflow-y:auto" aria-live="polite"></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('atsModal')" style="flex:1">Tutup</button></div>
+  </div>
+</div>
+<div class="modal-backdrop" id="cropModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h2 class="modal-title">✂️ Crop Foto Profil</h2>
+    <p class="modal-subtitle">Drag untuk geser · Slider untuk zoom</p>
+    <canvas id="cropCanvas" width="280" height="280" style="display:block;border-radius:var(--r-md);border:1px solid var(--border);cursor:grab;max-width:100%"></canvas>
+    <div style="margin-top:var(--s2);display:flex;align-items:center;gap:var(--s2)">
+      <label class="field-label" style="min-width:40px">Zoom</label>
+      <input type="range" min="1" max="3" step="0.05" value="1" id="cropZoom" class="slider" oninput="drawCrop()"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="applyCrop()" style="flex:1">✓ Terapkan</button>
+      <button class="btn btn-ghost" onclick="closeModal('cropModal')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer" aria-live="assertive" aria-atomic="true"></div>
+<input type="file" id="jsonInput" accept=".json" style="display:none" onchange="handleJSON(this)"/>
+
+<script>
+/* ===================== CONSTANTS ===================== */
+const SL={experience:'💼 Pengalaman',education:'🎓 Pendidikan',skills:'⚡ Keahlian',projects:'🚀 Proyek',certificates:'🏆 Sertifikat',languages:'🌐 Bahasa',achievements:'🥇 Prestasi',organizations:'🏛️ Organisasi',hobbies:'🎯 Hobi'};
+const SKLVL={Pemula:20,Menengah:45,Mahir:70,Expert:95};
+const LNGLVL=['Dasar','Menengah','Conversational','Fasih','Native','Profesional'];
+const ITPLS={
+  experience:{label:'Pengalaman',fields:[{id:'position',label:'Jabatan',ph:'Software Engineer'},{id:'company',label:'Perusahaan',ph:'PT. Teknologi Maju'},{id:'startDate',label:'Mulai',ph:'Jan 2022'},{id:'endDate',label:'Selesai',ph:'Sekarang'},{id:'location',label:'Lokasi',ph:'Jakarta'},{id:'type',label:'Tipe',ph:'Full-time'},{id:'desc',label:'Deskripsi & Pencapaian',ph:'• Memimpin tim 5 developer...\n• Meningkatkan performa 40%...',ta:true,full:true}]},
+  education:{label:'Pendidikan',fields:[{id:'institution',label:'Institusi',ph:'Universitas Indonesia'},{id:'degree',label:'Gelar / Jurusan',ph:'S1 Teknik Informatika'},{id:'startDate',label:'Mulai',ph:'2018'},{id:'endDate',label:'Selesai',ph:'2022'},{id:'gpa',label:'IPK',ph:'3.72'},{id:'desc',label:'Keterangan',ph:'Ketua UKM, Beasiswa...',ta:true,full:true}]},
+  projects:{label:'Proyek',fields:[{id:'name',label:'Nama Proyek',ph:'E-Commerce Platform'},{id:'url',label:'URL',ph:'github.com/user/project'},{id:'tech',label:'Teknologi',ph:'React, Node.js'},{id:'year',label:'Tahun',ph:'2023'},{id:'role',label:'Peranmu',ph:'Lead Developer'},{id:'desc',label:'Deskripsi',ph:'Platform dengan fitur...',ta:true,full:true}]},
+  certificates:{label:'Sertifikat',fields:[{id:'name',label:'Nama Sertifikat',ph:'AWS Certified Developer'},{id:'issuer',label:'Penerbit',ph:'Amazon Web Services'},{id:'date',label:'Tanggal',ph:'Jun 2023'},{id:'expiry',label:'Berlaku Hingga',ph:'Jun 2026'},{id:'url',label:'Credential URL',ph:'https://...',full:true}]},
+  achievements:{label:'Prestasi',fields:[{id:'title',label:'Judul',ph:'Juara 1 Hackathon'},{id:'org',label:'Penyelenggara',ph:'Kominfo'},{id:'year',label:'Tahun',ph:'2023'},{id:'desc',label:'Keterangan',ph:'500+ peserta...',ta:true,full:true}]},
+  organizations:{label:'Organisasi',fields:[{id:'name',label:'Nama Organisasi',ph:'Himpunan Mahasiswa'},{id:'role',label:'Jabatan',ph:'Ketua Divisi IT'},{id:'startDate',label:'Mulai',ph:'2021'},{id:'endDate',label:'Selesai',ph:'2022'},{id:'desc',label:'Deskripsi',ph:'Mengelola 20 anggota...',ta:true,full:true}]}
+};
+
+/* ===================== STATE ===================== */
+function mkS(){return{theme:'minimal',accent:'#8B1A1A',font:'Arial',margin:14,spacing:1.55,fontSize:9,secs:{experience:true,education:true,skills:true,projects:false,certificates:false,languages:false,achievements:false,organizations:false,hobbies:false},cv:{name:'',title:'',email:'',phone:'',location:'',linkedin:'',website:'',summary:'',hobbies:'',photo:'',experience:[],education:[],skills:[],projects:[],certificates:[],languages:[],achievements:[],organizations:[]},hist:[],hIdx:-1,saveTimer:null};}
+let S=mkS(),_cImg=null,_cOX=0,_cOY=0,_cDrag=false,_cDX=0,_cDY=0,_cZoom=null;
+
+/* ===================== UTILS ===================== */
+const esc=s=>s==null?'':String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+const unesc=s=>s==null?'':String(s).replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#039;/g,"'");
+const gi=id=>{const e=document.getElementById(id);return e?e.value:''};
+const si=(id,v)=>{const e=document.getElementById(id);if(e)e.value=unesc(v||'')};
+function dbn(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms)}}
+const debouncedUpdate=dbn(updateCV,280);
+function closeModal(id){document.getElementById(id)?.classList.remove('open')}
+
+/* ===================== PANEL OPEN/CLOSE ===================== */
+let _activePanel=null;
+function openPanel(key){
+  if(_activePanel)document.getElementById('panel-'+_activePanel)?.classList.remove('open');
+  _activePanel=key;
+  const p=document.getElementById('panel-'+key);
+  if(p){p.classList.add('open');p.querySelector('.panel-body')?.scrollTo(0,0)}
+  // focus first input in panel
+  setTimeout(()=>{const f=p?.querySelector('input,textarea,select');if(f)f.focus()},350);
+  // mobile nav: mark editor tab active (panel is "in" the editor)
+  if(window.innerWidth<=768){
+    document.querySelectorAll('.mnav-btn[id^="mnav"]').forEach(b=>b.classList.remove('active'));
+    document.getElementById('mnavEdit')?.classList.add('active');
+    _mnavActive='edit';
+  }
+}
+function closePanel(key){
+  document.getElementById('panel-'+key)?.classList.remove('open');
+  if(_activePanel===key)_activePanel=null;
+  updateSnippets();
+  // mobile nav: back to editor tab
+  if(window.innerWidth<=768){
+    document.querySelectorAll('.mnav-btn[id^="mnav"]').forEach(b=>b.classList.remove('active'));
+    document.getElementById('mnavEdit')?.classList.add('active');
+    _mnavActive='edit';
+  }
+}
+
+/* ===================== SNIPPETS (cards summary) ===================== */
+function updateSnippets(){
+  const cv=S.cv;
+  // Basic
+  const bParts=[cv.name,cv.title,cv.email].filter(Boolean).map(v=>`<span class="snippet-tag">${esc(unesc(v).substring(0,24))}</span>`);
+  document.getElementById('snipBasic').innerHTML=bParts.length?bParts.join(''):'<span class="snippet-tag" style="color:var(--tx-3)">Klik untuk mengisi…</span>';
+  // Experience
+  const expTags=cv.experience.map(e=>`<span class="snippet-tag">${esc(unesc(e.position||'').substring(0,20))}</span>`);
+  document.getElementById('snipExperience').innerHTML=expTags.length?expTags.join(''):'<span style="color:var(--tx-3);font-size:11px">Belum ada · Klik untuk tambah</span>';
+  document.getElementById('cntExperience').textContent=cv.experience.length+' item';
+  // Education
+  const eduTags=cv.education.map(e=>`<span class="snippet-tag">${esc(unesc(e.institution||'').substring(0,22))}</span>`);
+  document.getElementById('snipEducation').innerHTML=eduTags.length?eduTags.join(''):'<span style="color:var(--tx-3);font-size:11px">Belum ada pendidikan</span>';
+  document.getElementById('cntEducation').textContent=cv.education.length+' item';
+  // Skills
+  const skTags=cv.skills.slice(0,6).map(s=>`<span class="snippet-tag">${esc(unesc(s.name||'').substring(0,16))}</span>`);
+  const skMore=cv.skills.length>6?`<span class="snippet-tag" style="color:var(--accent)">+${cv.skills.length-6}</span>`:'';
+  document.getElementById('snipSkills').innerHTML=skTags.length?skTags.join('')+skMore:'<span style="color:var(--tx-3);font-size:11px">Tambahkan skill…</span>';
+  document.getElementById('cntSkills').textContent=cv.skills.length+' skill';
+  // Projects
+  const prTags=cv.projects.map(p=>`<span class="snippet-tag">${esc(unesc(p.name||'').substring(0,20))}</span>`);
+  document.getElementById('snipProjects').innerHTML=prTags.length?prTags.join(''):'<span style="color:var(--tx-3);font-size:11px">Tampilkan proyek terbaik</span>';
+  document.getElementById('cntProjects').textContent=cv.projects.length+' item';
+  // Certificates
+  const ceTags=cv.certificates.map(c=>`<span class="snippet-tag">${esc(unesc(c.name||'').substring(0,22))}</span>`);
+  document.getElementById('snipCertificates').innerHTML=ceTags.length?ceTags.join(''):'<span style="color:var(--tx-3);font-size:11px">AWS, Google, Meta, dll.</span>';
+  document.getElementById('cntCertificates').textContent=cv.certificates.length+' item';
+  // Languages
+  const lgTags=cv.languages.map(l=>`<span class="snippet-tag">${esc(unesc(l.name||''))} <span style="opacity:.55">${l.level}</span></span>`);
+  document.getElementById('snipLanguages').innerHTML=lgTags.length?lgTags.join(''):'<span style="color:var(--tx-3);font-size:11px">Indonesia, Inggris…</span>';
+  document.getElementById('cntLanguages').textContent=cv.languages.length+' bahasa';
+  // Achievements
+  const acTags=cv.achievements.map(a=>`<span class="snippet-tag">${esc(unesc(a.title||'').substring(0,22))}</span>`);
+  document.getElementById('snipAchievements').innerHTML=acTags.length?acTags.join(''):'<span style="color:var(--tx-3);font-size:11px">Hackathon, beasiswa…</span>';
+  document.getElementById('cntAchievements').textContent=cv.achievements.length+' item';
+  // Organizations
+  const ogTags=cv.organizations.map(o=>`<span class="snippet-tag">${esc(unesc(o.name||'').substring(0,22))}</span>`);
+  document.getElementById('snipOrganizations').innerHTML=ogTags.length?ogTags.join(''):'<span style="color:var(--tx-3);font-size:11px">UKM, komunitas…</span>';
+  document.getElementById('cntOrganizations').textContent=cv.organizations.length+' item';
+  // Hobbies
+  const hb=unesc(cv.hobbies||'');
+  document.getElementById('snipHobbies').innerHTML=hb?`<span class="snippet-tag">${esc(hb.substring(0,50))}</span>`:'<span style="color:var(--tx-3);font-size:11px">Membaca, fotografi…</span>';
+  document.getElementById('cntHobbies').textContent=hb?'Ada':'–';
+}
+
+/* ===================== THEME / ACCENT ===================== */
+function setTheme(th){
+  S.theme='minimal';document.querySelectorAll('[data-th]').forEach(c=>{c.classList.add('active');c.setAttribute('aria-checked','true')});renderPreview();schedSave()
+}
+function setAccent(c){
+  S.accent=c;
+  document.querySelectorAll('[data-c]').forEach(s=>{s.classList.toggle('active',s.dataset.c===c);s.setAttribute('aria-checked',s.dataset.c===c?'true':'false')});
+  const hr=(h,a)=>{let hex=(h||'').replace('#','');if(hex.length===3)hex=hex.split('').map(x=>x+x).join('');const r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);if(isNaN(r)||isNaN(g)||isNaN(b))return`rgba(99,102,241,${a})`;return`rgba(${r},${g},${b},${a})`};
+  document.documentElement.style.setProperty('--accent',c);
+  document.documentElement.style.setProperty('--accent-l',hr(c,.12));
+  document.documentElement.style.setProperty('--accent-b',hr(c,.28));
+  renderPreview();schedSave();
+}
+function setFont(f){S.font=f;renderPreview();schedSave()}
+function setMargin(v){S.margin=+v;document.getElementById('marginVal').textContent=v+'mm';renderPreview()}
+function setSpacing(v){S.spacing=+v;document.getElementById('spacingVal').textContent=(+v).toFixed(2);renderPreview()}
+function setFontSize(v){S.fontSize=+v;document.getElementById('fontSizeVal').textContent=v+'pt';renderPreview()}
+
+/* ===================== SECTION TOGGLES ===================== */
+function renderSectionToggles(){
+  const c=document.getElementById('sectionToggles');
+  c.innerHTML=Object.entries(SL).map(([k,lb])=>`<div class="toggle-row" role="switch" aria-checked="${S.secs[k]}" tabindex="0" onclick="toggleSecV('${k}')" onkeydown="if(event.key==='Enter'||event.key===' ')toggleSecV('${k}')"><span>${lb}</span><div class="switch ${S.secs[k]?'on':''}" id="sw_${k}"></div></div>`).join('');
+}
+function toggleSecV(k){
+  S.secs[k]=!S.secs[k];
+  document.getElementById('sw_'+k)?.classList.toggle('on',S.secs[k]);
+  renderPreview();schedSave();
+}
+
+/* ===================== CV UPDATE ===================== */
+function updateCV(){
+  const cv=S.cv;
+  cv.name=esc(gi('fName'));cv.title=esc(gi('fTitle'));cv.email=esc(gi('fEmail'));
+  cv.phone=esc(gi('fPhone'));cv.location=esc(gi('fLocation'));cv.linkedin=esc(gi('fLinkedin'));
+  cv.website=esc(gi('fWebsite'));cv.summary=esc(gi('fSummary'));cv.hobbies=esc(gi('fHobbies'));
+  schedSave();renderPreview();updateProgress();pushHist();updateSnippets();
+}
+function countChar(fid,cid,max){
+  const e=document.getElementById(fid),c=document.getElementById(cid);if(!e||!c)return;
+  const l=e.value.length;c.textContent=`${l} / ${max}`;
+  c.className='char-count'+(l>max*.975?' danger':l>max*.875?' warning':'');
+}
+function updateProgress(){
+  const cv=S.cv;
+  const ch=[cv.name,cv.title,cv.email,cv.phone,cv.summary&&cv.summary.length>50,cv.experience.length>0,cv.education.length>0,cv.skills.length>=3,cv.linkedin||cv.website,cv.location];
+  const sc=Math.round(ch.filter(Boolean).length/ch.length*100);
+  const f=document.getElementById('progressFill'),p=document.getElementById('progressPct');
+  if(f)f.style.width=sc+'%';if(p)p.textContent=sc+'%';
+}
+
+/* ===================== DYNAMIC ITEMS ===================== */
+function addItem(type){
+  const tpl=ITPLS[type];if(!tpl)return;
+  const o={id:Date.now()};tpl.fields.forEach(f=>o[f.id]='');
+  S.cv[type].push(o);renderList(type);renderPreview();updateProgress();pushHist();updateSnippets();
+  toast(`${tpl.label} ditambahkan`,'success');
+  setTimeout(()=>{const l=document.getElementById(type+'List');if(l?.lastElementChild)l.lastElementChild.scrollIntoView({behavior:'smooth',block:'nearest'})},80);
+}
+function removeItem(type,id){S.cv[type]=S.cv[type].filter(i=>i.id!==id);renderList(type);renderPreview();updateProgress();pushHist();updateSnippets()}
+function updateItem(type,id,field,val){const o=S.cv[type].find(i=>i.id===id);if(o)o[field]=esc(val);schedSave();renderPreview();updateProgress();updateSnippets()}
+function moveItem(type,id,dir){
+  const arr=S.cv[type],idx=arr.findIndex(i=>i.id===id);if(idx<0)return;
+  const ni=idx+dir;if(ni<0||ni>=arr.length)return;
+  [arr[idx],arr[ni]]=[arr[ni],arr[idx]];renderList(type);renderPreview();pushHist();
+}
+function togDyn(type,id){
+  const el=document.querySelector(`[data-dyn="${type}-${id}"]`);if(!el)return;
+  const isC=el.classList.toggle('collapsed');
+  el.querySelector('.dyn-header')?.setAttribute('aria-expanded',(!isC).toString());
+}
+function renderList(type){
+  const tpl=ITPLS[type],c=document.getElementById(type+'List');if(!c)return;
+  const emIds={experience:'expEmpty',education:'eduEmpty',projects:'projEmpty',certificates:'certEmpty',achievements:'achEmpty',organizations:'orgEmpty'};
+  const em=emIds[type]?document.getElementById(emIds[type]):null;
+  if(em)em.style.display=S.cv[type].length===0?'block':'none';
+  c.innerHTML=S.cv[type].map((item,idx)=>{
+    const isF=idx===0,isL=idx===S.cv[type].length-1;
+    const pv=unesc(item.position||item.name||item.title||item.institution||item.role||'');
+    const ps=unesc(item.company||item.issuer||item.org||'');
+    let fh='<div class="item-fields cols-2">';
+    tpl.fields.forEach(f=>{
+      const val=unesc(item[f.id]||'');
+      const cs=f.full?'style="grid-column:1/-1"':'';
+      if(f.ta)fh+=`<div ${cs}><div class="field-group"><label class="field-label">${f.label}</label><textarea class="field-input field-textarea" placeholder="${f.ph||''}" oninput="updateItem('${type}',${item.id},'${f.id}',this.value);autoGrow(this)" rows="4">${val}</textarea></div></div>`;
+      else fh+=`<div ${cs}><div class="field-group"><label class="field-label">${f.label}</label><input type="text" class="field-input" value="${esc(val)}" placeholder="${f.ph||''}" oninput="updateItem('${type}',${item.id},'${f.id}',this.value)"/></div></div>`;
+    });
+    fh+='</div>';
+    return`<div class="dyn-item" data-dyn="${type}-${item.id}" role="listitem"><div class="dyn-header" onclick="togDyn('${type}',${item.id})" aria-expanded="true"><span class="drag-handle">⣿</span><span class="item-title-txt">${tpl.label} ${idx+1}${pv?` — <span style="color:var(--accent)">${esc(pv.substring(0,30))}</span>`:''}</span>${ps?`<span class="item-meta-txt">${esc(ps.substring(0,22))}</span>`:''}<div class="item-actions" onclick="event.stopPropagation()"><button class="mini-btn" onclick="moveItem('${type}',${item.id},-1)" ${isF?'disabled':''} aria-label="Naik">↑</button><button class="mini-btn" onclick="moveItem('${type}',${item.id},1)" ${isL?'disabled':''} aria-label="Turun">↓</button><button class="mini-btn del" onclick="removeItem('${type}',${item.id})" aria-label="Hapus">✕</button></div></div><div class="dyn-body">${fh}</div></div>`;
+  }).join('');
+  setTimeout(()=>c.querySelectorAll('textarea').forEach(autoGrow),50);
+}
+
+/* ===================== SKILLS ===================== */
+function addSkill(){
+  S.cv.skills.push({id:Date.now(),name:'',level:'Mahir'});
+  renderSkillList();renderPreview();pushHist();updateSnippets();
+}
+function removeSkill(id){S.cv.skills=S.cv.skills.filter(s=>s.id!==id);renderSkillList();renderPreview();pushHist();updateSnippets()}
+function updateSkill(id,f,v){
+  const s=S.cv.skills.find(s=>s.id===id);if(!s)return;
+  s[f]=f==='name'?esc(v):v;
+  if(f==='level'){const b=document.getElementById('skBar_'+id);if(b)b.style.width=(SKLVL[v]||70)+'%'}
+  schedSave();renderPreview();updateSnippets();
+}
+function renderSkillList(){
+  const c=document.getElementById('skillList');if(!c)return;
+  const em=document.getElementById('skillEmpty');if(em)em.style.display=S.cv.skills.length===0?'block':'none';
+  c.innerHTML=S.cv.skills.map(sk=>{
+    const p=SKLVL[sk.level]||70;
+    return`<div class="skill-row" role="listitem"><input type="text" class="field-input" style="flex:1;min-width:0" placeholder="React, Python, Figma..." value="${unesc(sk.name)}" oninput="updateSkill(${sk.id},'name',this.value)" aria-label="Nama skill"/><div class="skill-bar-wrap"><div class="skill-bar"><div class="skill-fill" id="skBar_${sk.id}" style="width:${p}%"></div></div><select class="skill-select" onchange="updateSkill(${sk.id},'level',this.value)" aria-label="Level">${Object.keys(SKLVL).map(l=>`<option value="${l}" ${sk.level===l?'selected':''}>${l}</option>`).join('')}</select></div><button class="mini-btn del" onclick="removeSkill(${sk.id})" aria-label="Hapus">✕</button></div>`;
+  }).join('');
+}
+
+/* ===================== LANGUAGES ===================== */
+function addLang(){
+  S.cv.languages.push({id:Date.now(),name:'',level:'Fasih'});
+  renderLangList();renderPreview();pushHist();updateSnippets();
+}
+function removeLang(id){S.cv.languages=S.cv.languages.filter(l=>l.id!==id);renderLangList();renderPreview();pushHist();updateSnippets()}
+function updateLang(id,f,v){const l=S.cv.languages.find(l=>l.id===id);if(l)l[f]=f==='name'?esc(v):v;schedSave();renderPreview();updateSnippets()}
+function renderLangList(){
+  const c=document.getElementById('languageList');if(!c)return;
+  const em=document.getElementById('langEmpty');if(em)em.style.display=S.cv.languages.length===0?'block':'none';
+  c.innerHTML=S.cv.languages.map(l=>`<div class="skill-row" role="listitem"><input type="text" class="field-input" style="flex:1;min-width:0" placeholder="Bahasa Inggris" value="${unesc(l.name)}" oninput="updateLang(${l.id},'name',this.value)" aria-label="Bahasa"/><select class="skill-select" onchange="updateLang(${l.id},'level',this.value)" aria-label="Level">${LNGLVL.map(v=>`<option value="${v}" ${l.level===v?'selected':''}>${v}</option>`).join('')}</select><button class="mini-btn del" onclick="removeLang(${l.id})" aria-label="Hapus">✕</button></div>`).join('');
+}
+
+/* ===================== RENDER ALL ===================== */
+function renderAllLists(){
+  Object.keys(ITPLS).forEach(t=>renderList(t));
+  renderSkillList();renderLangList();
+  const cv=S.cv;
+  si('fName',cv.name);si('fTitle',cv.title);si('fEmail',cv.email);si('fPhone',cv.phone);
+  si('fLocation',cv.location);si('fLinkedin',cv.linkedin);si('fWebsite',cv.website);
+  si('fSummary',cv.summary);si('fHobbies',cv.hobbies);
+  countChar('fSummary','sumCount',800);
+  if(cv.photo){const img=document.getElementById('photoImg');if(img){img.src=cv.photo;img.style.display='block';document.getElementById('photoPlaceholder').style.display='none'}}
+  updateSnippets();
+}
+
+/* ===================== PREVIEW ===================== */
+let _liveZoom=null;
+const renderPreview=dbn(()=>{
+  const html=renderMinimal();
+  const c=document.getElementById('cvPage');if(c)c.innerHTML=html;
+  const cl=document.getElementById('previewClone');if(cl)cl.innerHTML=html;
+  const lv=document.getElementById('cvPageLive');if(lv)lv.innerHTML=html;
+  scalePreview();scaleLive();
+},150);
+
+function scaleLive(){
+  const pane=document.getElementById('livePreviewScroll');
+  const page=document.getElementById('cvPageLive');
+  if(!pane||!page)return;
+  if(_liveZoom!==null){
+    page.style.transform=`scale(${_liveZoom})`;
+    const lbl=document.getElementById('liveZoomLabel');
+    if(lbl)lbl.textContent=Math.round(_liveZoom*100)+'%';
+    return;
+  }
+  const avail=pane.clientWidth-24;
+  const sc=Math.min(1,avail/(210*3.7795));
+  page.style.transform=`scale(${sc})`;
+  page.style.transformOrigin='top center';
+  const lbl=document.getElementById('liveZoomLabel');
+  if(lbl)lbl.textContent=Math.round(sc*100)+'%';
+  // shrink container so scrollbar appears correctly
+  page.style.marginBottom=`${-(297*3.7795*(1-sc))}px`;
+}
+function zoomLive(d){
+  const pane=document.getElementById('livePreviewScroll');
+  const page=document.getElementById('cvPageLive');
+  if(!pane||!page)return;
+  if(_liveZoom===null){
+    const avail=pane.clientWidth-24;
+    _liveZoom=Math.min(1,avail/(210*3.7795));
+  }
+  _liveZoom=Math.min(1.5,Math.max(0.2,_liveZoom+d));
+  page.style.transform=`scale(${_liveZoom})`;
+  page.style.transformOrigin='top center';
+  page.style.marginBottom=`${-(297*3.7795*(1-_liveZoom))}px`;
+  const lbl=document.getElementById('liveZoomLabel');
+  if(lbl)lbl.textContent=Math.round(_liveZoom*100)+'%';
+}
+function zoomLiveReset(){_liveZoom=null;scaleLive();}
+
+function openPreview(){
+  const html=renderMinimal();
+  const c=document.getElementById('cvPage');if(c)c.innerHTML=html;
+  const cl=document.getElementById('previewClone');if(cl)cl.innerHTML=html;
+  document.getElementById('previewModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(scalePreview,50);
+}
+function scalePreview(){
+  const w=document.getElementById('previewWrapper'),p=document.getElementById('previewClone');if(!w||!p)return;
+  const av=w.clientWidth-48;
+  const sc=Math.min(1,av/(210*3.7795));
+  p.style.transform=`scale(${sc})`;p.style.transformOrigin='top center';
+  const zl=document.getElementById('zoomLabel');if(zl)zl.textContent=Math.round(sc*100)+'%';
+  _cZoom=null;
+}
+function closePreview(){
+  document.getElementById('previewModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+function zoomPreview(d){
+  const p=document.getElementById('previewClone'),w=document.getElementById('previewWrapper');if(!p||!w)return;
+  if(_cZoom===null)_cZoom=Math.min(1,(w.clientWidth-48)/(210*3.7795));
+  _cZoom=Math.min(2,Math.max(0.3,_cZoom+d));
+  p.style.transform=`scale(${_cZoom})`;
+  const zl=document.getElementById('zoomLabel');if(zl)zl.textContent=Math.round(_cZoom*100)+'%';
+}
+function zoomReset(){_cZoom=null;scalePreview()}
+
+/* ===================== TEMPLATE MINIMAL ===================== */
+function renderMinimal(){
+  const cv=S.cv,ac=S.accent,f=S.font,sp=S.spacing,fs=S.fontSize+'pt';
+  const contacts=[
+    cv.email&&`<span>✉ ${unesc(cv.email)}</span>`,
+    cv.phone&&`<span>☏ ${unesc(cv.phone)}</span>`,
+    cv.location&&`<span>⌖ ${unesc(cv.location)}</span>`,
+    cv.linkedin&&`<span>${unesc(cv.linkedin)}</span>`,
+    cv.website&&`<span>${unesc(cv.website)}</span>`
+  ].filter(Boolean).join('');
+  const sec=(label,content)=>content?`<div class="cvm-section"><div class="cvm-sec-label" style="color:${ac};border-bottom:1.5px solid ${ac}">${label}</div>${content}</div>`:'';
+  const expH=S.secs.experience&&cv.experience.length?cv.experience.map(e=>`<div style="margin-bottom:8px"><div class="cvm-row"><span class="cvm-pos">${unesc(e.position||'')}</span><span class="cvm-date">${unesc(e.startDate||'')}${e.endDate?' – '+unesc(e.endDate):''}</span></div><div class="cvm-company">${unesc(e.company||'')}${e.location?' · '+unesc(e.location):''}${e.type?' · '+unesc(e.type):''}</div>${e.desc?unesc(e.desc).split('\n').filter(Boolean).map(l=>l.startsWith('•')||l.startsWith('-')?`<div class="cvm-bullet-m">${l.replace(/^[•\-]\s*/,'')}</div>`:`<div class="cvm-desc">${l}</div>`).join(''):''}</div>`).join('').trim():'';
+  const eduH=S.secs.education&&cv.education.length?cv.education.map(e=>`<div style="margin-bottom:7px"><div class="cvm-row"><span class="cvm-pos">${unesc(e.institution||'')}</span><span class="cvm-date">${unesc(e.startDate||'')}${e.endDate?' – '+unesc(e.endDate):''}</span></div><div class="cvm-company">${unesc(e.degree||'')}${e.gpa?' · IPK '+unesc(e.gpa):''}</div>${e.desc?`<div class="cvm-desc">${unesc(e.desc)}</div>`:''}</div>`).join(''):'';
+  const skH=S.secs.skills&&cv.skills.length?`<div class="cvm-tags">${cv.skills.map(s=>`<span class="cvm-tag">${unesc(s.name)}${s.level&&s.level!=='Mahir'?` <span style="color:#aaa;font-size:7pt">${s.level}</span>`:''}</span>`).join('')}</div>`:'';
+  const lgH=S.secs.languages&&cv.languages.length?`<div>${cv.languages.map(l=>`<div class="cvm-lang-row"><span>${unesc(l.name)}</span><span style="color:#888">${l.level}</span></div>`).join('')}</div>`:'';
+  const prH=S.secs.projects&&cv.projects.length?cv.projects.map(p=>`<div style="margin-bottom:7px"><div class="cvm-row"><span class="cvm-pos">${unesc(p.name||'')}</span><span class="cvm-date">${unesc(p.year||'')}</span></div><div class="cvm-company">${unesc(p.tech||'')}${p.role?' · '+unesc(p.role):''}</div>${p.desc?`<div class="cvm-desc">${unesc(p.desc)}</div>`:''}</div>`).join(''):'';
+  const ceH=S.secs.certificates&&cv.certificates.length?cv.certificates.map(c=>`<div style="margin-bottom:6px"><div class="cvm-row"><span class="cvm-pos">${unesc(c.name||'')}</span><span class="cvm-date">${unesc(c.date||'')}</span></div><div class="cvm-company">${unesc(c.issuer||'')}${c.expiry?' · s/d '+unesc(c.expiry):''}</div></div>`).join(''):'';
+  const acH=S.secs.achievements&&cv.achievements.length?cv.achievements.map(a=>`<div style="margin-bottom:5px"><div class="cvm-row"><span class="cvm-pos">${unesc(a.title||'')}</span><span class="cvm-date">${unesc(a.year||'')}</span></div>${a.org?`<div class="cvm-company">${unesc(a.org)}</div>`:''}</div>`).join(''):'';
+  const ogH=S.secs.organizations&&cv.organizations.length?cv.organizations.map(o=>`<div style="margin-bottom:6px"><div class="cvm-row"><span class="cvm-pos">${unesc(o.name||'')}</span><span class="cvm-date">${unesc(o.startDate||'')}${o.endDate?' – '+unesc(o.endDate):''}</span></div>${o.role?`<div class="cvm-company">${unesc(o.role)}</div>`:''}</div>`).join(''):'';
+  const rfH='';
+  const photoEl=cv.photo?`<img src="${cv.photo}" class="cvm-photo" alt="Foto"/>`:'';
+  return`<div class="cv-minimal" style="font-family:'${f}',Arial,sans-serif;line-height:${sp};font-size:${fs}">
+<div class="cvm-header">
+  <div class="cvm-title-block">
+    <div class="cvm-name">${unesc(cv.name)||'Nama Anda'}</div>
+    ${cv.title?`<div class="cvm-jobtitle">${unesc(cv.title)}</div>`:''}
+    ${contacts?`<div class="cvm-contacts">${contacts}</div>`:''}
+  </div>
+  ${photoEl}
+</div>
+<div class="cvm-divider"></div>
+${cv.summary&&S.secs!==false?sec('Profil',`<div class="cvm-desc" style="line-height:1.65;font-size:8.5pt">${unesc(cv.summary)}</div>`):''}
+${sec('Pengalaman Kerja',expH)}
+${sec('Pendidikan',eduH)}
+${sec('Keahlian',skH)}
+${sec('Proyek',prH)}
+${sec('Sertifikat',ceH)}
+${sec('Prestasi',acH)}
+${sec('Bahasa',lgH)}
+${sec('Organisasi',ogH)}
+${cv.hobbies&&S.secs.hobbies?sec('Hobi & Minat',`<div class="cvm-desc">${unesc(cv.hobbies)}</div>`):''}
+</div>`;
+}
+
+/* ===================== PHOTO ===================== */
+function triggerPhoto(){document.getElementById('photoInput').click()}
+function handlePhoto(input){
+  const f=input.files[0];if(!f)return;
+  if(f.size>8*1024*1024){toast('Foto terlalu besar (maks 8MB)','error');return;}
+  const r=new FileReader();
+  r.onload=e=>{_cImg=new Image();_cImg.onload=()=>{_cOX=0;_cOY=0;openCrop()};_cImg.src=e.target.result};
+  r.readAsDataURL(f);input.value='';
+}
+function openCrop(){
+  document.getElementById('cropModal').classList.add('open');
+  document.getElementById('cropZoom').value=1;drawCrop();
+  const cv=document.getElementById('cropCanvas');
+  const dn=e=>{_cDrag=true;const pt=e.touches?e.touches[0]:e;_cDX=pt.clientX-_cOX;_cDY=pt.clientY-_cOY;cv.style.cursor='grabbing'};
+  const mv=e=>{if(!_cDrag)return;e.preventDefault();const pt=e.touches?e.touches[0]:e;_cOX=pt.clientX-_cDX;_cOY=pt.clientY-_cDY;drawCrop()};
+  const up=()=>{_cDrag=false;cv.style.cursor='grab'};
+  cv.onmousedown=dn;cv.onmousemove=mv;cv.onmouseup=up;cv.ontouchstart=dn;cv.ontouchmove=mv;cv.ontouchend=up;
+}
+function drawCrop(){
+  if(!_cImg)return;
+  const cv=document.getElementById('cropCanvas'),ctx=cv.getContext('2d'),z=+document.getElementById('cropZoom').value;
+  ctx.clearRect(0,0,280,280);
+  const sc=z*Math.max(280/_cImg.width,280/_cImg.height),w=_cImg.width*sc,h=_cImg.height*sc;
+  ctx.drawImage(_cImg,_cOX+(280-w)/2,_cOY+(280-h)/2,w,h);
+}
+function applyCrop(){
+  S.cv.photo=document.getElementById('cropCanvas').toDataURL('image/jpeg',.85);
+  const img=document.getElementById('photoImg');img.src=S.cv.photo;img.style.display='block';
+  document.getElementById('photoPlaceholder').style.display='none';
+  closeModal('cropModal');renderPreview();schedSave();toast('Foto diupdate ✓','success');
+}
+function removePhoto(){
+  S.cv.photo='';
+  const img=document.getElementById('photoImg');img.src='';img.style.display='none';
+  document.getElementById('photoPlaceholder').style.display='flex';
+  renderPreview();schedSave();
+}
+
+/* ===================== ATS CHECK ===================== */
+function runATSCheck(){
+  const cv=S.cv;let score=0;const tips=[];
+  if(cv.name)score+=10;else tips.push('❌ Nama belum diisi');
+  if(cv.email)score+=8;else tips.push('❌ Email belum diisi');
+  if(cv.phone)score+=5;else tips.push('⚠️ Telepon belum diisi');
+  if(cv.summary&&cv.summary.length>100)score+=15;else if(cv.summary)score+=7;else tips.push('❌ Summary belum diisi — sangat penting untuk ATS');
+  if(cv.experience.length>0){score+=15;if(cv.experience.some(e=>e.desc&&e.desc.length>50))score+=10;else tips.push('⚠️ Tambahkan deskripsi detail untuk setiap pengalaman')}else tips.push('❌ Pengalaman kerja belum diisi');
+  if(cv.education.length>0)score+=10;else tips.push('⚠️ Pendidikan belum diisi');
+  if(cv.skills.length>=5)score+=15;else if(cv.skills.length>0){score+=7;tips.push(`⚠️ Tambahkan lebih banyak skill (${cv.skills.length}/5 minimum)`)}else tips.push('❌ Skills belum diisi');
+  if(cv.linkedin)score+=5;else tips.push('💡 Tambahkan URL LinkedIn');
+  if(S.theme==='modern'||S.theme==='minimal')score+=7;
+  score=Math.min(100,score);
+  const ring=document.getElementById('atsRing'),fill=document.getElementById('atsFill'),lbl=document.getElementById('atsLabel'),sc=document.getElementById('atsScore');
+  sc.textContent=score;fill.style.width=score+'%';
+  const color=score>=80?'var(--success)':score>=60?'var(--warning)':'var(--danger)';
+  const lb=score>=80?'Sangat Baik':score>=60?'Cukup Baik':'Perlu Perbaikan';
+  ring.style.borderColor=color;sc.style.color=color;fill.style.background=color;lbl.textContent=lb;lbl.style.color=color;
+  const te=document.getElementById('atsTips');
+  if(te)te.innerHTML=tips.slice(0,3).map(t=>`<div style="font-size:11px;color:var(--tx-2);margin-top:3px;padding:3px 6px;background:var(--bg-surface-2);border-radius:var(--r-sm)">${t}</div>`).join('');
+  document.getElementById('atsModalTitle').textContent=`🤖 ATS Score: ${score}/100 — ${lb}`;
+  document.getElementById('atsModalContent').innerHTML=`<p style="margin-bottom:12px"><strong>Hasil analisis:</strong></p>${tips.map(t=>`<p style="margin-bottom:8px">${t}</p>`).join('')}${tips.length===0?'<p>✅ Semua kriteria utama terpenuhi!</p>':''}<hr style="border-color:var(--border);margin:12px 0"/><p style="font-size:11px;color:var(--tx-3)">Skor berdasarkan kelengkapan data, kualitas konten, dan kompatibilitas template dengan ATS parser.</p>`;
+  document.getElementById('atsModal').classList.add('open');
+  toast(`ATS Score: ${score}/100 — ${lb}`,score>=60?'success':'warning');
+}
+
+/* ===================== UNDO/REDO ===================== */
+function pushHist(){
+  const snap=JSON.stringify({cv:{...S.cv,photo:''}});
+  S.hist=S.hist.slice(0,S.hIdx+1);S.hist.push(snap);S.hIdx=S.hist.length-1;
+  if(S.hist.length>50){S.hist.shift();S.hIdx--}
+}
+function doUndo(){
+  if(S.hIdx<=0){toast('Tidak ada yang bisa di-undo','info');return;}
+  S.hIdx--;const snap=JSON.parse(S.hist[S.hIdx]);const ph=S.cv.photo;
+  Object.assign(S.cv,snap.cv);S.cv.photo=ph;renderAllLists();renderPreview();updateProgress();toast('Undo ↩','info');
+}
+function doRedo(){
+  if(S.hIdx>=S.hist.length-1){toast('Sudah di posisi terbaru','info');return;}
+  S.hIdx++;const snap=JSON.parse(S.hist[S.hIdx]);const ph=S.cv.photo;
+  Object.assign(S.cv,snap.cv);S.cv.photo=ph;renderAllLists();renderPreview();updateProgress();toast('Redo ↪','info');
+}
+
+/* ===================== SAVE/LOAD ===================== */
+function schedSave(){clearTimeout(S.saveTimer);S.saveTimer=setTimeout(saveStorage,1500)}
+function saveStorage(){
+  try{localStorage.setItem('cvpro_v6',JSON.stringify({cv:S.cv,theme:S.theme,accent:S.accent,font:S.font,margin:S.margin,spacing:S.spacing,fontSize:S.fontSize,secs:S.secs}));showSaved()}
+  catch(e){toast('Storage penuh. Coba hapus foto profil.','warning')}
+}
+function loadStorage(){
+  try{
+    const raw=localStorage.getItem('cvpro_v6');if(!raw)return;
+    const d=JSON.parse(raw);
+    if(d.cv)Object.assign(S.cv,d.cv);
+    if(d.theme&&['modern','minimal'].includes(d.theme))S.theme=d.theme;else S.theme='modern';
+    if(d.accent){S.accent=d.accent;setAccent(d.accent)}
+    if(d.font){S.font=d.font;const fs=document.getElementById('fontSelect');if(fs)fs.value=d.font}
+    if(typeof d.spacing==='number'){S.spacing=d.spacing;const sl=document.getElementById('spacingSlider');if(sl)sl.value=d.spacing;const sv=document.getElementById('spacingVal');if(sv)sv.textContent=(+d.spacing).toFixed(2)}
+    if(d.secs)Object.assign(S.secs,d.secs);
+    document.querySelectorAll('[data-th]').forEach(c=>c.classList.toggle('active',c.dataset.th===S.theme));
+  }catch(e){console.warn('loadStorage:',e)}
+}
+function showSaved(){const el=document.getElementById('savedBadge');if(el){el.style.opacity='1';setTimeout(()=>el.style.opacity='0',2500)}}
+
+/* ===================== EXPORT/IMPORT ===================== */
+function buildPrintDoc(){
+  const cv=S.cv,ac=S.accent,f=S.font,sp=S.spacing,fs=S.fontSize;
+
+  /* ── bangun HTML CV langsung di sini (tidak pakai renderMinimal)
+     supaya TIDAK ada var(--...) atau class dari dark theme ── */
+  const unescStr=s=>unesc(s||'');
+  const contacts=[
+    cv.email    &&`<span>&#9993; ${unescStr(cv.email)}</span>`,
+    cv.phone    &&`<span>&#9743; ${unescStr(cv.phone)}</span>`,
+    cv.location &&`<span>&#8982; ${unescStr(cv.location)}</span>`,
+    cv.linkedin &&`<span>${unescStr(cv.linkedin)}</span>`,
+    cv.website  &&`<span>${unescStr(cv.website)}</span>`
+  ].filter(Boolean).join('');
+
+  const sec=(label,html)=>html?`
+    <div class="sec">
+      <div class="sec-label">${label}</div>
+      ${html}
+    </div>`:'';
+
+  const item=(rows)=>`<div class="item">${rows}</div>`;
+  const row=(l,r)=>`<div class="row"><span class="pos">${l}</span><span class="date">${r}</span></div>`;
+  const sub=(t)=>t?`<div class="sub">${t}</div>`:'';
+  const desc=(t)=>t?`<div class="desc">${t}</div>`:'';
+  const bullets=(txt)=>txt?txt.split('\n').filter(Boolean).map(l=>
+    l.startsWith('•')||l.startsWith('-')
+      ?`<div class="bul">${l.replace(/^[•\-]\s*/,'')}</div>`
+      :`<div class="desc">${l}</div>`
+  ).join(''):'';
+
+  const expH=S.secs.experience&&cv.experience.length
+    ?cv.experience.map(e=>item(
+        row(unescStr(e.position),unescStr(e.startDate)+(e.endDate?' – '+unescStr(e.endDate):''))
+        +sub([unescStr(e.company),e.location?unescStr(e.location):'',e.type?unescStr(e.type):''].filter(Boolean).join(' · '))
+        +bullets(unescStr(e.desc))
+      )).join(''):'';
+
+  const eduH=S.secs.education&&cv.education.length
+    ?cv.education.map(e=>item(
+        row(unescStr(e.institution),unescStr(e.startDate)+(e.endDate?' – '+unescStr(e.endDate):''))
+        +sub([unescStr(e.degree),e.gpa?'IPK '+unescStr(e.gpa):''].filter(Boolean).join(' · '))
+        +desc(unescStr(e.desc))
+      )).join(''):'';
+
+  const skH=S.secs.skills&&cv.skills.length
+    ?`<div class="tags">${cv.skills.map(s=>`<span class="tag">${unescStr(s.name)}${s.level&&s.level!=='Mahir'?' ('+s.level+')':''}</span>`).join('')}</div>`:'';
+
+  const prH=S.secs.projects&&cv.projects.length
+    ?cv.projects.map(p=>item(
+        row(unescStr(p.name),unescStr(p.year))
+        +sub([unescStr(p.tech),p.role?unescStr(p.role):''].filter(Boolean).join(' · '))
+        +desc(unescStr(p.desc))
+      )).join(''):'';
+
+  const ceH=S.secs.certificates&&cv.certificates.length
+    ?cv.certificates.map(c=>item(
+        row(unescStr(c.name),unescStr(c.date))
+        +sub([unescStr(c.issuer),c.expiry?'s/d '+unescStr(c.expiry):''].filter(Boolean).join(' · '))
+      )).join(''):'';
+
+  const lgH=S.secs.languages&&cv.languages.length
+    ?cv.languages.map(l=>`<div class="lang-row"><span>${unescStr(l.name)}</span><span class="lang-lv">${l.level}</span></div>`).join(''):'';
+
+  const acH=S.secs.achievements&&cv.achievements&&cv.achievements.length
+    ?cv.achievements.map(a=>item(
+        row(unescStr(a.title),unescStr(a.year))
+        +sub(unescStr(a.org))
+        +desc(unescStr(a.desc))
+      )).join(''):'';
+
+  const ogH=S.secs.organizations&&cv.organizations&&cv.organizations.length
+    ?cv.organizations.map(o=>item(
+        row(unescStr(o.name),unescStr(o.startDate)+(o.endDate?' – '+unescStr(o.endDate):''))
+        +sub(unescStr(o.role))
+        +desc(unescStr(o.desc))
+      )).join(''):'';
+
+  const photoHtml=cv.photo?`<img src="${cv.photo}" class="photo" alt="Foto"/>`:'';
+
+  return`<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<title>CV - ${unescStr(cv.name)}</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff!important;color:#1a1a1a;font-family:'${f}',Arial,sans-serif;font-size:${fs}pt;line-height:${sp}}
+@page{size:A4 portrait;margin:0}
+@media print{
+  .no-print{display:none!important}
+  body{padding-top:0!important;background:#fff!important}
+  .cv{box-shadow:none!important}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
+/* ── toolbar ── */
+.no-print{position:fixed;top:0;left:0;right:0;background:#222;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:9px 18px;font-family:Arial,sans-serif;font-size:13px;z-index:9999;gap:12px}
+.no-print strong{color:#7eff6a}
+.np-btn{padding:7px 18px;border:none;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;background:#4ade6e;color:#000}
+.np-btn:hover{background:#3bc45a}
+.np-x{background:none;color:#888;font-size:20px;padding:2px 8px;cursor:pointer}
+body{padding-top:48px}
+/* ── CV layout ── */
+.cv{background:#fff;width:210mm;min-height:297mm;padding:16mm 18mm;color:#1a1a1a}
+/* header */
+.header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;padding-bottom:10px}
+.header-left{flex:1}
+.photo{width:88px;height:88px;object-fit:cover;border-radius:3px;border:1px solid #ddd;margin-left:14px;flex-shrink:0}
+.name{font-size:22pt;font-weight:700;color:#111;letter-spacing:-.3px;line-height:1.1;margin-bottom:3px}
+.jobtitle{font-size:10pt;color:#555;margin-bottom:5px}
+.contacts{display:flex;flex-wrap:wrap;column-gap:14px;row-gap:2px;font-size:7.5pt;color:#555;margin-top:4px}
+.contacts span{white-space:nowrap}
+.divider{height:1.5px;background:#ddd;margin:8px 0 12px}
+/* sections */
+.sec{margin-bottom:13px;page-break-inside:avoid}
+.sec-label{font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:2px;padding-bottom:3px;margin-bottom:7px;border-bottom:1.5px solid ${ac}!important;color:${ac}!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+/* items */
+.item{margin-bottom:9px}
+.item:last-child{margin-bottom:0}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:1px}
+.pos{font-size:9.5pt;font-weight:700;color:#111;flex:1;min-width:0}
+.date{font-size:7.5pt;color:#888;white-space:nowrap;flex-shrink:0}
+.sub{font-size:8.5pt;color:#555;margin-bottom:3px;font-style:italic}
+.desc{font-size:8pt;color:#444;line-height:1.55;margin-bottom:2px}
+.bul{padding-left:12px;position:relative;font-size:8pt;color:#333;line-height:1.5;margin-bottom:2px}
+.bul::before{content:"–";position:absolute;left:0;color:#999}
+/* skills */
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{font-size:7.5pt;padding:2px 9px;border:1px solid #ccc;color:#333;background:#f9f9f9}
+/* languages */
+.lang-row{display:flex;justify-content:space-between;font-size:8.5pt;padding:3px 0;border-bottom:1px dotted #eee}
+.lang-row:last-child{border-bottom:none}
+.lang-lv{color:#888}
+/* summary */
+.summary{font-size:8.5pt;color:#444;line-height:1.65}
+/* hobbies */
+.hobbies{font-size:8.5pt;color:#444;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="no-print">
+  <span>Di dialog print, ganti Printer ke <strong>"Save as PDF"</strong> lalu klik Simpan</span>
+  <button class="np-btn" onclick="window.print()">🖨 Unduh PDF</button>
+  <button class="np-x" onclick="window.close()">✕</button>
+</div>
+<div class="cv">
+  <div class="header">
+    <div class="header-left">
+      <div class="name">${unescStr(cv.name)||'Nama Anda'}</div>
+      ${cv.title?`<div class="jobtitle">${unescStr(cv.title)}</div>`:''}
+      ${contacts?`<div class="contacts">${contacts}</div>`:''}
+    </div>
+    ${photoHtml}
+  </div>
+  <div class="divider"></div>
+  ${cv.summary&&S.secs.experience!==undefined?sec('Profil',`<div class="summary">${unescStr(cv.summary)}</div>`):''}
+  ${sec('Pengalaman Kerja',expH)}
+  ${sec('Pendidikan',eduH)}
+  ${sec('Keahlian',skH)}
+  ${sec('Proyek',prH)}
+  ${sec('Sertifikat',ceH)}
+  ${sec('Prestasi',acH)}
+  ${sec('Bahasa',lgH)}
+  ${sec('Organisasi',ogH)}
+  ${cv.hobbies&&S.secs.hobbies?sec('Hobi & Minat',`<div class="hobbies">${unescStr(cv.hobbies)}</div>`):''}
+</div>
+<script>
+window.addEventListener('load',function(){setTimeout(function(){window.print()},350)});
+<\/script>
+</body>
+</html>`;
+}
+
+function exportPDF(){
+  const cv=S.cv;
+  if(!cv.name&&!cv.experience.length){toast('Isi data CV terlebih dahulu','warning');return}
+  const doc=buildPrintDoc();
+  const blob=new Blob([doc],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const win=window.open(url,'_blank');
+  if(!win){
+    toast('Pop-up diblokir browser. Izinkan pop-up untuk situs ini.','error',5000);
+    return;
+  }
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+  toast('Tab PDF dibuka — pilih "Save as PDF" di dialog print','info',5000);
+}
+function exportJSON(){
+  const data=JSON.stringify({cv:S.cv,theme:S.theme,accent:S.accent,font:S.font,version:'6.0'},null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`cv-${unesc(S.cv.name||'data').replace(/\s+/g,'-').toLowerCase()}.json`;a.click();URL.revokeObjectURL(url);
+  toast('JSON disimpan ✓','success');
+}
+function openImport(){const el=document.getElementById('importStatus');if(el)el.style.display='none';document.getElementById('importModal').classList.add('open')}
+function showImportStatus(ok,msg){
+  const el=document.getElementById('importStatus');if(!el)return;
+  el.style.display='block';
+  el.style.borderColor=ok?'var(--success)':'var(--danger)';
+  el.style.background=ok?'var(--success-l)':'var(--danger-l)';
+  el.style.color=ok?'var(--success)':'var(--danger)';
+  el.textContent=(ok?'✓ ':'✕ ')+msg;
+}
+function applyImportData(d){
+  // Validasi: harus ada field 'cv' dan 'version' dari CV Builder Pro
+  if(!d||typeof d!=='object'||!d.cv||!d.version){
+    showImportStatus(false,'File ditolak — bukan dari CV Builder Pro');
+    toast('File tidak dikenali. Hanya file dari CV Builder Pro yang diterima.','error');return false;
+  }
+  // Pastikan struktur cv minimal valid
+  if(typeof d.cv!=='object'||Array.isArray(d.cv)){
+    showImportStatus(false,'File ditolak — struktur data tidak valid');
+    toast('Struktur file tidak valid.','error');return false;
+  }
+  // Apply data
+  Object.assign(S.cv,d.cv);
+  S.theme='minimal';setTheme('minimal');
+  if(d.accent)setAccent(d.accent);
+  if(d.font){S.font=d.font;const fs=document.getElementById('fontSelect');if(fs)fs.value=d.font}
+  if(typeof d.spacing==='number'){S.spacing=d.spacing;const sl=document.getElementById('spacingSlider');if(sl)sl.value=d.spacing;const sv=document.getElementById('spacingVal');if(sv)sv.textContent=(+d.spacing).toFixed(2)}
+  if(d.secs)Object.assign(S.secs,d.secs);
+  renderSectionToggles();renderAllLists();renderPreview();updateProgress();schedSave();
+  showImportStatus(true,'Import berhasil! CV siap diedit.');
+  toast('Import berhasil! CV siap diedit ✓','success');
+  setTimeout(()=>closeModal('importModal'),1500);
+  return true;
+}
+function handleJSON(input){
+  const f=input.files[0];if(!f)return;
+  // Cek ekstensi
+  if(!f.name.toLowerCase().endsWith('.json')){
+    showImportStatus(false,'File ditolak — harus berformat .json');
+    toast('File ditolak! Harus berformat .json dari CV Builder Pro.','error');
+    input.value='';return;
+  }
+  const r=new FileReader();
+  r.onload=e=>{
+    let d;
+    try{d=JSON.parse(e.target.result)}
+    catch{showImportStatus(false,'File ditolak — bukan JSON valid');toast('File tidak bisa dibaca sebagai JSON.','error');input.value='';return;}
+    applyImportData(d);
+  };
+  r.readAsText(f);input.value='';
+}
+function handleDrop(e){
+  e.preventDefault();document.querySelector('.import-zone')?.classList.remove('over');
+  const f=e.dataTransfer.files[0];if(!f)return;
+  if(!f.name.toLowerCase().endsWith('.json')){
+    showImportStatus(false,'File ditolak — harus berformat .json');
+    toast('File ditolak! Hanya .json dari CV Builder Pro.','error');return;
+  }
+  const r=new FileReader();
+  r.onload=ev=>{
+    let d;
+    try{d=JSON.parse(ev.target.result)}
+    catch{showImportStatus(false,'File ditolak — bukan JSON valid');toast('File tidak bisa dibaca.','error');return;}
+    applyImportData(d);
+  };
+  r.readAsText(f);
+}
+function confirmReset(){
+  document.getElementById('confirmMsg').textContent='Semua data CV akan dihapus permanen. Tidak bisa dibatalkan.';
+  document.getElementById('confirmYes').onclick=()=>{S.cv=mkS().cv;S.hist=[];S.hIdx=-1;renderAllLists();renderPreview();updateProgress();schedSave();closeModal('confirmModal');toast('CV direset.','info')};
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+/* ===================== SIDEBAR ===================== */
+function toggleSidebar(){
+  const sb=document.getElementById('mainSidebar'),btn=document.getElementById('sidebarToggle'),ov=document.getElementById('sidebarOverlay');
+  const o=sb.classList.toggle('open');btn.setAttribute('aria-expanded',o?'true':'false');ov?.classList.toggle('show',o);
+}
+
+/* ===================== MOBILE NAV ===================== */
+let _mnavActive='edit';
+function mnavGo(tab){
+  _mnavActive=tab;
+  document.querySelectorAll('.mnav-btn[id^="mnav"]').forEach(b=>b.classList.remove('active'));
+  if(tab==='edit'){
+    document.getElementById('mnavEdit')?.classList.add('active');
+    // close sidebar if open
+    const sb=document.getElementById('mainSidebar'),ov=document.getElementById('sidebarOverlay');
+    sb?.classList.remove('open');ov?.classList.remove('show');
+    document.getElementById('sidebarToggle')?.setAttribute('aria-expanded','false');
+    // close any open panel — back to cards
+    if(_activePanel)closePanel(_activePanel);
+  } else if(tab==='settings'){
+    document.getElementById('mnavSettings')?.classList.add('active');
+    toggleSidebar();
+  }
+}
+
+/* ===================== SAMPLE DATA ===================== */
+function fillSampleData(){
+  S.cv={name:'Reza Firmansyah',title:'Senior Full-Stack Developer',email:'reza@email.com',phone:'+62 812 3456 7890',location:'Jakarta, Indonesia',linkedin:'linkedin.com/in/rezafirmansyah',website:'github.com/rezafirmansyah',photo:'',summary:'Senior Full-Stack Developer dengan 5 tahun pengalaman membangun produk SaaS yang melayani 100.000+ pengguna. Spesialisasi dalam React, Node.js, dan cloud infrastructure. Terbukti meningkatkan performa sistem 40% dan memimpin tim lintas fungsi untuk menghasilkan produk yang berdampak nyata bagi bisnis.',hobbies:'Open Source, Hiking, Photography',
+  experience:[{id:1,position:'Senior Full-Stack Developer',company:'PT. Teknologi Nusantara',startDate:'Jan 2022',endDate:'Sekarang',location:'Jakarta / Remote',type:'Full-time',desc:'• Memimpin tim 5 developer dalam membangun platform e-commerce B2B\n• Meningkatkan performa sistem 40% melalui optimasi database dan Redis caching\n• Mengimplementasikan CI/CD pipeline yang mengurangi deployment time 60%\n• Mentoring 3 junior developer yang berhasil naik level dalam 6 bulan'},{id:2,position:'Frontend Developer',company:'Startup Kreatif Indonesia',startDate:'Jun 2020',endDate:'Des 2021',location:'Jakarta',type:'Full-time',desc:'• Membangun UI/UX aplikasi mobile React Native dengan 50K+ downloads\n• Berkolaborasi dengan tim desain meningkatkan user retention 25%\n• Mengintegrasikan 8 payment gateway untuk pasar Indonesia'}],
+  education:[{id:1,institution:'Universitas Indonesia',degree:'S1 Teknik Informatika',startDate:'2016',endDate:'2020',gpa:'3.72',desc:'Ketua UKM Robotika · Beasiswa Unggulan Kemendikbud'}],
+  skills:[{id:1,name:'React / Next.js',level:'Expert'},{id:2,name:'Node.js / Express',level:'Expert'},{id:3,name:'TypeScript',level:'Mahir'},{id:4,name:'PostgreSQL / MongoDB',level:'Mahir'},{id:5,name:'Docker / Kubernetes',level:'Menengah'},{id:6,name:'AWS / GCP',level:'Menengah'},{id:7,name:'System Design',level:'Mahir'}],
+  projects:[{id:1,name:'NusaShop Platform',url:'github.com/rezafirmansyah/nusashop',tech:'Next.js, Node.js, PostgreSQL',year:'2023',role:'Lead Developer',desc:'Platform e-commerce B2B dengan 10.000+ transaksi per bulan.'}],
+  certificates:[{id:1,name:'AWS Certified Developer – Associate',issuer:'Amazon Web Services',date:'Mar 2023',expiry:'Mar 2026',url:'credential.aws.com/abc123'}],
+  languages:[{id:1,name:'Bahasa Indonesia',level:'Native'},{id:2,name:'Bahasa Inggris',level:'Profesional'}],
+  achievements:[],organizations:[]};
+  Object.assign(S.secs,{experience:true,education:true,skills:true,projects:true,certificates:true,languages:true,achievements:false,organizations:false,hobbies:true});
+  S.theme='minimal';setTheme('minimal');setAccent(S.accent);
+  renderSectionToggles();renderAllLists();renderPreview();updateProgress();schedSave();toast('Data contoh dimuat! ✨','success');
+}
+
+/* ===================== TEXTAREA AUTO-GROW ===================== */
+function autoGrow(el){
+  if(!el)return;el.style.height='auto';el.style.height=Math.min(el.scrollHeight,400)+'px';
+}
+
+/* ===================== TOAST ===================== */
+function toast(msg,type='info',dur=3200){
+  const c=document.getElementById('toastContainer');
+  const el=document.createElement('div');el.className=`toast ${type}`;el.setAttribute('role','status');
+  el.innerHTML=`<span>${{success:'✓',error:'✕',warning:'⚠',info:'ℹ'}[type]||'ℹ'}</span><span>${msg}</span>`;
+  c.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(110%)';el.style.transition='all .3s ease';setTimeout(()=>el.remove(),300)},dur);
+}
+
+/* ===================== EVENTS ===================== */
+document.addEventListener('click',e=>{
+  const sb=document.getElementById('mainSidebar'),btn=document.getElementById('sidebarToggle'),ov=document.getElementById('sidebarOverlay');
+  if(window.innerWidth>768)return;
+  if(sb?.classList.contains('open')&&!sb.contains(e.target)&&!btn?.contains(e.target)){
+    sb.classList.remove('open');btn.setAttribute('aria-expanded','false');ov?.classList.remove('show');
+    // reset settings tab active
+    document.getElementById('mnavSettings')?.classList.remove('active');
+    document.getElementById('mnavEdit')?.classList.add('active');
+    _mnavActive='edit';
+  }
+});
+document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(_activePanel){closePanel(_activePanel);return}
+    document.querySelectorAll('.modal-backdrop.open').forEach(m=>m.classList.remove('open'));
+    closePreview();
+  }
+  const mod=e.ctrlKey||e.metaKey;
+  if(mod&&e.key==='z'&&!e.shiftKey){e.preventDefault();doUndo()}
+  if(mod&&(e.key==='y'||(e.key==='z'&&e.shiftKey))){e.preventDefault();doRedo()}
+  if(mod&&e.key==='s'){e.preventDefault();saveStorage();toast('Tersimpan ✓','success')}
+  if(mod&&e.key==='p'){e.preventDefault();exportPDF()}
+});
+document.addEventListener('input',e=>{if(e.target.tagName==='TEXTAREA')autoGrow(e.target)},true);
+window.addEventListener('resize',dbn(()=>{
+  if(window.innerWidth>768){const sb=document.getElementById('mainSidebar'),ov=document.getElementById('sidebarOverlay');sb?.classList.remove('open');ov?.classList.remove('show')}
+  scaleLive();
+},200));
+// keyboard on sec-cards
+document.querySelectorAll('.sec-card').forEach(c=>{
+  c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();c.click()}});
+});
+
+
+/* ===== WELCOME MODAL ===== */
+function showWelcome(){
+  if(localStorage.getItem('cvb_welcome_skip')==='1') return;
+  var m=document.getElementById('welcomeModal');
+  var isMobile=window.innerWidth<768||/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  document.getElementById('welcomeDeviceLabel').textContent=isMobile?'Terdeteksi: Perangkat Mobile':'Terdeteksi: Laptop / Desktop';
+  document.getElementById(isMobile?'tipMobile':'tipDesktop').style.display='';
+  m.classList.add('open');
+}
+function closeWelcome(){
+  if(document.getElementById('welcomeDontShow').checked){
+    localStorage.setItem('cvb_welcome_skip','1');
+  }
+  document.getElementById('welcomeModal').classList.remove('open');
+}
+
+/* ===================== INIT ===================== */
+function init(){
+  loadStorage();renderSectionToggles();renderAllLists();renderPreview();updateProgress();pushHist();
+  if(S.cv.name||S.cv.experience.length>0)toast('CV dimuat, lanjutkan editing ✓','success');
+  showWelcome();
+  setTimeout(()=>document.querySelectorAll('textarea').forEach(autoGrow),150);
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
